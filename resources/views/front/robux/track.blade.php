@@ -50,6 +50,17 @@
   .badge-info{ background:#cffafe; color:#0369a1; }
   .badge-success{ background:#dcfce7; color:#166534; }
   .badge-danger{ background:#fee2e2; color:#b91c1c; }
+
+  /* notice / disclaimer */
+  .notice{
+    border:1px dashed var(--border);
+    border-left:4px solid var(--primary);
+    background:#fff6fa;
+    color:#8b3a55;
+    border-radius:12px;
+    padding:12px 14px;
+    font-weight:700;
+  }
 </style>
 @include('front.header')
 <div class="container container--narrow py-4">
@@ -120,6 +131,13 @@
             @endif
           @endforeach
         </div>
+
+        {{-- DISCLAIMER saat completed --}}
+        @if($order->status === 'completed')
+          <div class="notice mt-3">
+            Robux Akan Masuk Dalam Waktu 5 hari
+          </div>
+        @endif
       </div>
 
       {{-- Ringkasan --}}

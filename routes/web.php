@@ -13,7 +13,23 @@ Route::get('/robux/topup', [TopupPageController::class, 'show'])->name('robux.to
 Route::post('/robux/topup', [TopupController::class, 'store'])->name('topup.store');
 Route::get('/cek-transaksi', [TopupController::class, 'track'])->name('order.track');
 
-Route::post('/api/roblox/resolve-username', [RobloxProxyController::class, 'resolve'])
+/*
+ * ROUTE BARU UNTUK VALIDASI LENGKAP
+ * Route ini akan menggantikan dua route di bawah.
+ */
+Route::post('/api/roblox/check', [RobloxProxyController::class, 'findPayableGamepass'])
+    ->name('roblox.check');
+
+// routes/web.php
+Route::post('/api/roblox/resolve', [RobloxProxyController::class, 'resolve'])
     ->name('roblox.resolve');
-Route::get('/api/roblox/check-experience/{userId}', [RobloxProxyController::class, 'experience'])
-    ->name('roblox.experience');
+
+
+/*
+ * Route lama (bisa dihapus atau dikomentari)
+ *
+ * Route::post('/api/roblox/resolve-username', [RobloxProxyController::class, 'resolve'])
+ * ->name('roblox.resolve');
+ * Route::get('/api/roblox/check-experience/{userId}', [RobloxProxyController::class, 'experience'])
+ * ->name('roblox.experience');
+*/

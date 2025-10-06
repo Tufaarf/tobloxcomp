@@ -91,39 +91,42 @@ class TopupOrderResource extends Resource
                 ->indicator('Status'),
         ])
         ->actions([
-            Tables\Actions\ViewAction::make(),
+    Tables\Actions\ViewAction::make(),
 
-            Tables\Actions\Action::make('approve')
-                ->label('Approve Payment')
-                ->visible(fn(TopupOrder $r) => $r->status === TopupOrder::STAT_PENDING)
-                ->color('success')
-                ->requiresConfirmation()
-                ->action(fn(TopupOrder $r) => $r->update(['status' => TopupOrder::STAT_APPROVED])),
+    Tables\Actions\Action::make('approve')
+        ->label('Approve & Complete')
+        ->visible(fn(TopupOrder $r) => $r->status === TopupOrder::STAT_PENDING)
+        ->color('success')
+        ->requiresConfirmation()
+        ->action(function (TopupOrder $r) {
+            $meta = $r->meta ?? [];
+            $now  = now()->toDateTimeString();
 
-            Tables\Actions\Action::make('reject')
-                ->visible(fn(TopupOrder $r)=> $r->status === TopupOrder::STAT_PENDING)
-                ->color('danger')
-                ->requiresConfirmation()
-                ->form([ Forms\Components\Textarea::make('reason')->label('Alasan')->required() ])
-                ->action(function (TopupOrder $r, array $data) {
-                    $meta = $r->meta ?? []; $meta['reject_reason'] = $data['reason'];
-                    $r->update(['status' => TopupOrder::STAT_REJECTED, 'meta' => $meta]);
-                }),
+            $meta['approved_at']  = $now;
+            $meta['completed_at'] = $now;
 
-            Tables\Actions\Action::make('startProgress')
-                ->label('Start Progress')
-                ->visible(fn(TopupOrder $r)=> $r->status === TopupOrder::STAT_APPROVED)
-                ->color('info')
-                ->requiresConfirmation()
-                ->action(fn(TopupOrder $r) => $r->update(['status' => TopupOrder::STAT_ON_PROGRESS])),
+            $r->update([
+                'status' => TopupOrder::STAT_COMPLETED,
+                'meta'   => $meta,
+            ]);
+        }),
 
-            Tables\Actions\Action::make('complete')
-                ->label('Mark Completed')
-                ->visible(fn(TopupOrder $r)=> $r->status === TopupOrder::STAT_ON_PROGRESS)
-                ->color('success')
-                ->requiresConfirmation()
-                ->action(fn(TopupOrder $r) => $r->update(['status' => TopupOrder::STAT_COMPLETED])),
-        ])
+    Tables\Actions\Action::make('reject')
+        ->visible(fn(TopupOrder $r)=> $r->status === TopupOrder::STAT_PENDING)
+        ->color('danger')
+        ->requiresConfirmation()
+        ->form([ Forms\Components\Textarea::make('reason')->label('Alasan')->required() ])
+        ->action(function (TopupOrder $r, array $data) {
+            $meta = $r->meta ?? [];
+            $meta['reject_reason'] = $data['reason'];
+            $r->update(['status' => TopupOrder::STAT_REJECTED, 'meta' => $meta]);
+        }),
+
+    // Aksi berikut sudah tidak diperlukan:
+    // - Start Progress
+    // - Mark Completed
+])
+
         ->persistFiltersInSession();
 }
 
