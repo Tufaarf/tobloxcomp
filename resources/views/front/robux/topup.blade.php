@@ -38,6 +38,19 @@ input[type="range"]::-webkit-slider-thumb{ appearance:none; width:18px; height:1
 .modal-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px }
 .modal-close{ background:transparent; border:none; font-size:20px; line-height:1; cursor:pointer }
 
+.pill-input{
+  height:44px; min-width:120px; padding:0 14px;
+  border-radius:999px; border:1px solid var(--border);
+  background:#fff6fa; color:var(--primary); font-weight:800;
+  text-align:center; outline:none;
+  transition:border-color .15s, box-shadow .15s;
+}
+.pill-input:focus{ border-color:var(--primary); box-shadow:0 0 0 4px var(--ring) }
+/* Hilangkan spinner number di browser tertentu */
+.pill-input::-webkit-outer-spin-button,
+.pill-input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
+.pill-input[type=number]{ -moz-appearance:textfield }
+
 /* Spinner */
 .spinner{ width:34px; height:34px; border-radius:50%; border:3px solid #eee; border-top-color:var(--primary); animation: spin 1s linear infinite; margin:auto }
 @keyframes spin{ to{ transform:rotate(360deg) } }
@@ -93,7 +106,22 @@ input[type="range"]::-webkit-slider-thumb{ appearance:none; width:18px; height:1
           <input type="range" min="50" max="5000" step="50"
                  value="{{ old('robux_amount', 50) }}"
                  id="robuxSlider" name="robux_amount" oninput="updatePrice()">
-          <p class="mt-2">Robux: <span id="robuxAmount" class="pill">{{ old('robux_amount', 50) }}</span></p>
+         <p class="mt-2 d-flex align-items-center gap-2 flex-wrap">
+  <span>Robux:</span>
+
+  <!-- INPUT BARU: tampil sebagai "badge pill" -->
+  <input
+    id="robuxPill"
+    type="number"
+    inputmode="numeric"
+    class="pill pill-input"
+    value="{{ old('robux_amount', 50) }}"
+    aria-label="Jumlah Robux (ketik angka)"
+  />
+
+  <!-- SPAN LAMA: tetap ada tapi disembunyikan agar updatePrice() tidak error -->
+  <span id="robuxAmount" class="pill" style="display:none">{{ old('robux_amount', 50) }}</span>
+</p>
           <p class="price-row">Harga: <span class="rp">Rp</span> <span id="robuxPrice" class="price-num">7000</span></p>
         </div>
       </div>
@@ -189,6 +217,9 @@ input[type="range"]::-webkit-slider-thumb{ appearance:none; width:18px; height:1
     </div>
   </form>
 </div>
+
+
+
 
 <script>
 const pricePer50 = {{ (int)($pricePer50 ?? 7000) }};
@@ -445,6 +476,57 @@ window.onYouTubeIframeAPIReady = function(){
 document.addEventListener('DOMContentLoaded', () => {
   updatePrice();
   onUsernameInput();
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const slider = document.getElementById('robuxSlider');
+  const pill   = document.getElementById('robuxPill'); // input pill yang kamu tambahkan
+  if (!slider || !pill) return;
+
+  // Nilai awal
+  pill.value = slider.value;
+
+  // SLIDER -> PILL (biar tetap sinkron saat digeser)
+  slider.addEventListener('input', () => {
+    pill.value = slider.value; // updatePrice sudah dipanggil via oninput di HTML slider
+  });
+
+  // Helper parse angka (biarkan user ketik bebas dulu)
+  const parseDigits = (str) => {
+    const m = String(str).match(/\d+/);
+    return m ? parseInt(m[0], 10) : NaN;
+  };
+
+  // PILL -> SLIDER (tanpa clamp saat mengetik)
+  pill.addEventListener('input', () => {
+    const v = parseDigits(pill.value);
+    if (Number.isNaN(v)) return;               // kosong/parsial: jangan ganggu proses ketik
+
+    const min = +slider.min || 0;
+    const max = +slider.max || 999999;
+
+    // Hanya sinkronkan ke slider kalau SUDAH berada di rentang.
+    // Ini mencegah "lompat" saat baru ketik 1, 13, 135 menuju 1350.
+    if (v >= min && v <= max) {
+      slider.value = v;       // tidak dibulatkan, biarkan apa adanya
+      updatePrice();          // pakai logika harga milikmu
+    }
+  });
+
+  // Saat blur, baru pastikan valid & sinkron total
+  pill.addEventListener('blur', () => {
+    let v = parseDigits(pill.value);
+    const min = +slider.min || 0;
+    const max = +slider.max || 999999;
+
+    if (Number.isNaN(v)) v = min;
+    v = Math.min(max, Math.max(min, v));
+
+    slider.value = v;
+    pill.value   = v;
+    updatePrice();
+  });
 });
 </script>
 
