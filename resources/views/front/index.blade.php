@@ -186,6 +186,172 @@ section[id] {                         /* kurangi jarak antar semua section */
   font-size: 1.1rem;
   margin-top: 0.5rem;
 }
+
+/* ===== Game Categories ===== */
+.game-category-btn {
+  display: block;
+  text-decoration: none;
+  padding: 8px;  /* reduced from 12px */
+  border-radius: 12px; /* reduced from 16px */
+  background: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.game-category-btn:hover {
+  transform: translateY(-2px);
+}
+
+.game-category-btn.active {
+  background: #f187ab;
+}
+
+.game-category-btn img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px; /* reduced from 12px */
+  margin-bottom: 6px; /* reduced from 8px */
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  padding: 6px; /* reduced from 8px */
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.game-category-btn.active img {
+  background: rgba(255,255,255,0.9);
+}
+
+.game-category-btn .game-name {
+  color: #f187ab;
+  font-size: 0.75rem; /* reduced from 0.875rem */
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.game-category-btn.active .game-name {
+  color: #fff;
+}
+
+.game-category-btn .all-games-icon {
+  width: 100%;
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 10px; /* reduced from 12px */
+  font-size: 1.25rem; /* reduced from 1.5rem */
+  color: #f187ab;
+  margin-bottom: 6px; /* reduced from 8px */
+  transition: all 0.3s ease;
+}
+
+.game-category-btn.active .all-games-icon {
+  background: rgba(255,255,255,0.9);
+}
+.game-category-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.game-category-btn {
+  display: inline-block;
+  width: 120px;
+  text-decoration: none;
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.game-category-btn:hover {
+  transform: translateY(-2px);
+}
+
+.game-category-btn img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  object-fit: contain;
+}
+
+.game-category-btn.active {
+  background: #f187ab;
+}
+
+.game-category-btn.active img {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.game-category-btn .game-name {
+  color: #f187ab;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.game-category-btn.active .game-name {
+  color: #fff;
+}
+
+/* Style the search input */
+.game-search {
+  margin: 20px 0;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #f187ab;
+  width: 100%;
+  max-width: 350px;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.game-category-swiper {
+  position: relative;
+  padding: 0 40px;
+}
+
+.game-category-swiper .swiper-button-next,
+.game-category-swiper .swiper-button-prev {
+  color: #f187ab;
+  width: 30px;
+  height: 30px;
+}
+
+.game-category-swiper .swiper-button-next:after,
+.game-category-swiper .swiper-button-prev:after {
+  font-size: 20px;
+}
+
+.game-category-swiper .game-category-btn {
+  margin: 0 8px;
+}
+
+/* Add these CSS rules after existing game category styles */
+.game-category-desktop {
+  display: none;
+}
+.game-category-mobile {
+  display: block;
+}
+@media (min-width: 992px) {
+  .game-category-desktop {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 10px 0;
+  }
+  .game-category-mobile {
+    display: none;
+  }
+}
 </style>
 
 <body class="index-page">
@@ -219,68 +385,116 @@ section[id] {                         /* kurangi jarak antar semua section */
     <!-- /Hero Section -->
 
     <!-- Services Section -->
-    <section id="services" class="services section">
+     <section id="services" class="services section">
+  <div class="container section-title" data-aos="fade-up">
+  <h2 style="color: #f187ab">Services</h2>
+  <p style="color: #f187ab">Featured Services<br></p>
+  </div>
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+ <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 cards-row">
+   @forelse ($services->take(3) as $service)
+   <div class="col d-flex">
+    <div class="service-item h-100 w-100 position-relative p-4">
+    <div class="details">
+     <div class="icon mb-3 d-flex align-items-center justify-content-center">
+     <i class="bi bi-{{$service->icon_class}}"></i>
+     </div>
+     <a href="{{Route('robux.topup')}}" class="stretched-link">
+     <h3 class="h5 mb-2">{{ $service->title }}</h3>
+     </a>
+     <p class="mb-0">{!! $service->description !!}</p>
+    </div>
+    </div>
+   </div>
+   @empty
+   <div class="col"><p class="mb-0">Tidak ada Data</p></div>
+   @endforelse
+  </div>
+  </div>
+ </section>
+    <!-- /Services Section -->
+
+    <!-- Game Category Section -->
+    <section class="section light-background">
       <div class="container section-title" data-aos="fade-up">
-        <h2 style="color: #f187ab">Services</h2>
-        <p style="color: #f187ab">Featured Services<br></p>
+        <h2 style="color: #f187ab">Games</h2>
+        <p style="color: #f187ab">Choose Your Game<br></p>
       </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 cards-row">
-          @forelse ($services->take(3) as $service)
-            <div class="col d-flex">
-              <div class="service-item h-100 w-100 position-relative p-4">
-                <div class="details">
-                  <div class="icon mb-3 d-flex align-items-center justify-content-center">
-                    <i class="bi bi-{{$service->icon_class}}"></i>
+        <!-- Search input -->
+        <input type="text" id="gameSearch" class="game-search" placeholder="Search for games..." onkeyup="searchGames()">
+
+        <!-- Desktop Layout -->
+        <div class="game-category-desktop" id="gameCategoryDesktop">
+          @foreach($games as $game)
+            <div class="game-category-btn" data-game="{{ $game->id }}">
+              <img src="{{ Storage::url($game->icon) }}" alt="{{ $game->name }}">
+              <div class="game-name">{{ $game->name }}</div>
+            </div>
+          @endforeach
+          <div class="game-category-btn" data-game="all">
+            <div class="all-games-icon">
+              <i class="bi bi-grid"></i>
+            </div>
+            <div class="game-name">All Games</div>
+          </div>
+        </div>
+
+        <!-- Mobile Carousel -->
+        <div class="game-category-mobile">
+          <div class="swiper game-category-swiper">
+            <div class="swiper-wrapper" id="gameCategory">
+              @foreach($games as $game)
+                <div class="swiper-slide" style="width: auto">
+                  <div class="game-category-btn" data-game="{{ $game->id }}">
+                    <img src="{{ Storage::url($game->icon) }}" alt="{{ $game->name }}">
+                    <div class="game-name">{{ $game->name }}</div>
                   </div>
-                  <a href="{{Route('robux.topup')}}" class="stretched-link">
-                    <h3 class="h5 mb-2">{{ $service->title }}</h3>
-                  </a>
-                  <p class="mb-0">{!! $service->description !!}</p>
+                </div>
+              @endforeach
+              <div class="swiper-slide" style="width: auto">
+                <div class="game-category-btn" data-game="all">
+                  <div class="all-games-icon">
+                    <i class="bi bi-grid"></i>
+                  </div>
+                  <div class="game-name">All Games</div>
                 </div>
               </div>
             </div>
-          @empty
-            <div class="col"><p class="mb-0">Tidak ada Data</p></div>
-          @endforelse
-        </div>
-      </div>
-    </section>
-    <!-- /Services Section -->
-
-    <!-- Product Section -->
-    <section class="product-section">
-      <div class="container">
-        <div class="section-title text-center" data-aos="fade-up">
-          <h2>🔥 Product Terbaru!!</h2>
-        </div>
-
-        <div class="swiper product-swiper" data-aos="fade-up">
-          <div class="swiper-wrapper">
-            @forelse ($products as $product)
-              <div class="swiper-slide">
-                <div class="product-card">
-                  <a href="{{ route('front.product.detail', $product->id) }}" class="text-decoration-none">
-                    <img src="{{ Storage::url($product->image) }}" class="card-img" alt="{{ $product->name }}">
-                    <div class="card-body">
-                      <h5 class="card-title">{{ $product->name }}</h5>
-                      <div class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            @empty
-              <div class="swiper-slide">
-                <p class="text-center">Tidak ada produk</p>
-              </div>
-            @endforelse
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
           </div>
-          <div class="swiper-pagination"></div>
         </div>
       </div>
     </section>
-    <!-- /Product Section -->
+    <!-- /Game Category Section -->
+
+    <!-- Game Items Section -->
+    <section class="section pb-5">
+      <div class="container">
+        <div class="row g-4" id="itemList" data-aos="fade-up">
+          @foreach($items->take(4) as $item)
+            <div class="col-6 col-md-3 item-card" data-game="{{ $item->game ? $item->game->id : '' }}">
+              <a href="{{ route('front.product.detail', $item->id) }}" class="text-decoration-none">
+                <div class="card product-card h-100">
+                  <img src="{{ Storage::url($item->banner) }}" class="card-img-top" alt="{{ $item->name }}" style="height:140px;object-fit:cover;">
+                  <div class="card-body p-3">
+                    <h5 class="card-title h6 mb-1">{{ $item->name }}</h5>
+                    <p class="card-text small mb-2">{{ $item->description }}</p>
+                    <div class="product-price">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                    <div class="mt-1 text-muted small">Game: {{ $item->game ? $item->game->name : '-' }}</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          @endforeach
+
+        </div>
+      </div>
+    </section>
+    <!-- /Game Items Section -->
 
     <!-- About Section -->
     <section id="about" class="about section">
@@ -309,6 +523,10 @@ section[id] {                         /* kurangi jarak antar semua section */
 
     <!-- Stats Section -->
     <section id="stats" class="stats section light-background">
+        <div class="container section-title" data-aos="fade-up">
+        <h2 style="color: #f187ab">Stats</h2>
+        <p style="color: #f187ab">Toblox ID stats<br></p>
+      </div>
       <div class="container" data-aos="fade-up" data-aos-delay="100">
         <div class="row gy-4">
           @forelse ($companyStats as $stat)
@@ -469,7 +687,160 @@ section[id] {                         /* kurangi jarak antar semua section */
           }
         }
       });
+
+      // Initialize game category swiper
+      new Swiper('.game-category-swiper', {
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+          320: {
+            slidesPerView: 2,
+          },
+          576: {
+            slidesPerView: 3,
+          },
+          768: {
+            slidesPerView: 4,
+          }
+        }
+      });
+
+      // Game category filter
+      document.querySelectorAll('.game-category-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var selected = this.getAttribute('data-game');
+          // Remove active class from all buttons
+          document.querySelectorAll('.game-category-btn').forEach(function(b){
+            b.classList.remove('active');
+          });
+          // Add active class to clicked button
+          this.classList.add('active');
+          // Filter items
+          document.querySelectorAll('.item-card').forEach(function(card){
+            if(selected === 'all' || card.getAttribute('data-game') === selected){
+              card.style.display = '';
+            }else{
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
     });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      GLightbox({
+        selector: '.portfolio .glightbox',
+        descPosition: 'right',
+        width: '96vw',
+        height: '90vh',
+        loop: true,
+      });
+
+      // Initialize product swiper
+      new Swiper('.product-swiper', {
+        slidesPerView: 'auto',
+        spaceBetween: 25,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
+        breakpoints: {
+          320: {
+            slidesPerView: 1,
+            spaceBetween: 20
+          },
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 20
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 25
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 25
+          }
+        }
+      });
+
+      // Initialize game category swiper
+      new Swiper('.game-category-swiper', {
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+          320: {
+            slidesPerView: 2,
+          },
+          576: {
+            slidesPerView: 3,
+          },
+          768: {
+            slidesPerView: 4,
+          }
+        }
+      });
+
+      // Game category filter
+      document.querySelectorAll('.game-category-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var selected = this.getAttribute('data-game');
+          // Remove active class from all buttons
+          document.querySelectorAll('.game-category-btn').forEach(function(b){
+            b.classList.remove('active');
+          });
+          // Add active class to clicked button
+          this.classList.add('active');
+          // Filter items
+          document.querySelectorAll('.item-card').forEach(function(card){
+            if(selected === 'all' || card.getAttribute('data-game') === selected){
+              card.style.display = '';
+            }else{
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+
+    function searchGames() {
+      var input = document.getElementById('gameSearch');
+      var filter = input.value.toUpperCase();
+
+      // Search in desktop layout
+      var desktopBtns = document.getElementById("gameCategoryDesktop").getElementsByClassName('game-category-btn');
+      searchInElements(desktopBtns, filter);
+
+      // Search in mobile layout
+      var mobileBtns = document.getElementById("gameCategory").getElementsByClassName('game-category-btn');
+      searchInElements(mobileBtns, filter);
+    }
+
+    function searchInElements(elements, filter) {
+      for (var i = 0; i < elements.length; i++) {
+        var gameName = elements[i].getElementsByClassName("game-name")[0];
+        var txtValue = gameName.textContent || gameName.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          elements[i].style.display = "";
+        } else {
+          elements[i].style.display = "none";
+        }
+      }
+    }
   </script>
 
 </body>

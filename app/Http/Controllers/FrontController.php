@@ -56,6 +56,9 @@ class FrontController extends Controller
                ->orderByRaw('sort_order IS NULL, sort_order ASC')
                ->orderBy('id')
                ->get();
+    $games = \App\Models\Game::all();
+
+     $items = \App\Models\Item::with('game')->get();
 
     return view('front.index', compact(
         'herosections',
@@ -66,7 +69,9 @@ class FrontController extends Controller
         'products',
         'teams',
         'community',
-        'faqs'
+        'faqs',
+        'games',
+        'items',
     ));
 }
 
@@ -87,8 +92,24 @@ class FrontController extends Controller
 
     public function productDetail($id)
     {
-        $product = Product::findOrFail($id);
-        return view('front.detail-product', compact('product'));
+        $product = \App\Models\Item::with('game')->findOrFail($id);
+        $paymentMethods = collect(config('topup.methods', []))
+            ->map(function ($m, $code) {
+                return [
+                    'code'   => $code,
+                    'name'   => $m['name'],
+                    'fee'    => (float) $m['fee'],
+                    'type'   => $m['type'],     // text|image
+                    'target' => $m['target'],   // nomor / path gambar
+                ];
+            })->values();
+        return view('front.detail-product', compact('product', 'paymentMethods'));
+    }
+
+    public function item(){
+        $items = \App\Models\Item::with('game')->get();
+        $herosections = HeroSection::all();
+        return view('front.item', compact('items', 'herosections'));
     }
 
      public function robuxPage()
