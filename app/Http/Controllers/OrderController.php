@@ -65,7 +65,7 @@ class OrderController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Order berhasil dibuat!',
+                'message' => 'Order berhasil dibuat!, Harap Tunggu Konfirmasi dari admin melalui whatsapp',
                 'redirect_url' => route('front.index')
             ]);
 
