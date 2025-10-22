@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PromoController;
 use App\Http\Controllers\RobloxProxyController;
 use App\Http\Controllers\TopupController;
 use App\Http\Controllers\TopupPageController;
@@ -14,6 +15,7 @@ Route::get('/product/{id}', [FrontController::class, 'productDetail'])->name('fr
 Route::get('/robux/topup', [TopupPageController::class, 'show'])->name('robux.topup');
 Route::post('/robux/topup', [TopupController::class, 'store'])->name('topup.store');
 Route::get('/cek-transaksi', [TopupController::class, 'track'])->name('order.track');
+Route::get('/robux-promo', [PromoController::class, 'index'])->name('promo.index');
 
 Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
 Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');
