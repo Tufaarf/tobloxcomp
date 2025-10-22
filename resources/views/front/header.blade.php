@@ -57,16 +57,32 @@
     /* === Responsif untuk Mobile === */
     @media (max-width: 768px) {
         .custom-header {
-            padding: 12px 0; /* Diperbesar dari 10px */
+            padding: 10px 0;
         }
 
         .custom-header .logo img {
-            max-height: 35px; /* Diperbesar dari 32px */
+            max-height: 32px;
+        }
+
+        .custom-header .navigation ul {
+            gap: 5px;
         }
 
         .custom-header .navigation a {
-            padding: 6px 8px;
-            font-size: 14px;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+    }
+
+    /* Extra Small Devices */
+    @media (max-width: 576px) {
+        .custom-header .navigation a {
+            padding: 3px 6px;
+            font-size: 11px;
+        }
+
+        .custom-header .logo img {
+            max-height: 28px;
         }
     }
 </style>
