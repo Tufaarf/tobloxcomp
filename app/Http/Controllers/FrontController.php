@@ -182,5 +182,9 @@ class FrontController extends Controller
         return response()->json(['status' => true, 'universes' => $universes]);
     }
 
+    public function robuxServices(){
+        return view('front.robux.services');
+    }
+
 
 }

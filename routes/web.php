@@ -16,6 +16,7 @@ Route::get('/robux/topup', [TopupPageController::class, 'show'])->name('robux.to
 Route::post('/robux/topup', [TopupController::class, 'store'])->name('topup.store');
 Route::get('/cek-transaksi', [TopupController::class, 'track'])->name('order.track');
 Route::get('/robux-promo', [PromoController::class, 'index'])->name('promo.index');
+Route::get('/robux/services', [FrontController::class, 'robuxServices'])->name('robux.services');
 
 Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
 Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');

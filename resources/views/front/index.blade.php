@@ -458,7 +458,7 @@ section[id] {                         /* kurangi jarak antar semua section */
   <div class="container" data-aos="fade-up" data-aos-delay="100">
     <div class="row g-4 justify-content-center">
       <div class="col-6 col-md-3">
-        <a href="{{ route('robux.topup') }}" class="text-decoration-none">
+        <a href="{{ route('robux.services') }}" class="text-decoration-none">
           <div class="service-card">
             <div class="icon">
               <i class="bi bi-currency-dollar"></i>
