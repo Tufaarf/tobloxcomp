@@ -234,6 +234,70 @@ section[id] {                         /* kurangi jarak antar semua section */
   color: #fff;
 }
 
+/* ===== Featured Services (custom cards like screenshot) ===== */
+#services .service-card {
+  border-radius:14px;
+  background: #fff5f8;
+  border: 1px solid rgba(241,135,171,0.12);
+  padding: 18px;
+  text-align: center;
+  min-height: 140px;
+  max-width: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+#services .service-card .icon{
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:14px;
+  background:#fff;
+  box-shadow:0 6px 20px rgba(0,0,0,.06);
+  color:#f187ab;
+  font-size:28px;
+  line-height:72px;
+  flex: 0 0 auto;
+}
+#services .service-card h5{ margin:0; font-weight:700; color:#f187ab; font-size:1.05rem; }
+#services .service-card p{ margin:8px 0 0; color:#f187ab; opacity:.9; font-size:.9rem; }
+#services .service-card:hover{ transform: translateY(-6px); box-shadow:0 14px 36px rgba(0,0,0,.08); }
+#services .service-card.coming-soon{ background:#3f3a3a; color:#fff; border:0; }
+#services .service-card.coming-soon .icon{ background:transparent; color:rgba(255,255,255,.95); box-shadow:none; }
+#services .service-card.coming-soon h5, #services .service-card.coming-soon p{ color:#fff; }
+
+@media (max-width: 576px){
+  #services .service-card { min-height:120px; padding:14px; }
+  #services .service-card .icon{ width:56px; height:56px; line-height:56px; font-size:22px; margin-bottom:10px; }
+}
+
+/* ===== Stats cards: center content ===== */
+#stats .stats-item {
+  justify-content: center; /* vertical centering */
+  text-align: center;     /* center text inside */
+}
+#stats .stats-item > div {
+  width: 100%;
+  text-align: center;
+}
+#stats .stats-item span {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f187ab;
+}
+#stats .stats-item p {
+  margin: 0;
+  color: #f187ab;
+  font-weight: 600;
+}
+
 .game-category-btn .all-games-icon {
   width: 100%;
   aspect-ratio: 1/1;
@@ -387,30 +451,46 @@ section[id] {                         /* kurangi jarak antar semua section */
     <!-- Services Section -->
      <section id="services" class="services section">
   <div class="container section-title" data-aos="fade-up">
-  <h2 style="color: #f187ab">Services</h2>
-  <p style="color: #f187ab">Featured Services<br></p>
+  <h2 style="color: #f187ab">Layanan</h2>
+  <p style="color: #f187ab">Pilih Layanan Yang Kamu Mau<br></p>
   </div>
 
   <div class="container" data-aos="fade-up" data-aos-delay="100">
- <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 cards-row">
-   @forelse ($services->take(3) as $service)
-   <div class="col d-flex">
-    <div class="service-item h-100 w-100 position-relative p-4">
-    <div class="details">
-     <div class="icon mb-3 d-flex align-items-center justify-content-center">
-     <i class="bi bi-{{$service->icon_class}}"></i>
-     </div>
-     <a href="{{Route('robux.topup')}}" class="stretched-link">
-     <h3 class="h5 mb-2">{{ $service->title }}</h3>
-     </a>
-     <p class="mb-0">{!! $service->description !!}</p>
+    <div class="row g-4 justify-content-center">
+      <div class="col-6 col-md-3">
+        <a href="{{ route('robux.topup') }}" class="text-decoration-none">
+          <div class="service-card">
+            <div class="icon">
+              <i class="bi bi-currency-dollar"></i>
+            </div>
+            <h5>Beli Robux</h5>
+            <p class="small">Cepat &amp; Aman</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="{{ route('front.items') }}" class="text-decoration-none">
+          <div class="service-card">
+            <div class="icon">
+              <i class="bi bi-gift"></i>
+            </div>
+            <h5>Item Roblox</h5>
+            <p class="small">Hadiah &amp; Pass</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="service-card coming-soon">
+          <div class="icon">
+            <i class="bi bi-hourglass-split"></i>
+          </div>
+          <h5>Coming Soon!</h5>
+          <p class="small">Coming Soon</p>
+        </div>
+      </div>
     </div>
-    </div>
-   </div>
-   @empty
-   <div class="col"><p class="mb-0">Tidak ada Data</p></div>
-   @endforelse
-  </div>
   </div>
  </section>
     <!-- /Services Section -->
@@ -418,8 +498,7 @@ section[id] {                         /* kurangi jarak antar semua section */
     <!-- Game Category Section -->
     <section class="section light-background">
       <div class="container section-title" data-aos="fade-up">
-        <h2 style="color: #f187ab">Games</h2>
-        <p style="color: #f187ab">Choose Your Game<br></p>
+        <p style="color: #f187ab">Cari Map Disini<br></p>
       </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -522,28 +601,29 @@ section[id] {                         /* kurangi jarak antar semua section */
     <!-- /About Section -->
 
     <!-- Stats Section -->
-    <section id="stats" class="stats section light-background">
-        <div class="container section-title" data-aos="fade-up">
+   <section id="stats" class="stats section light-background">
+    <div class="container section-title" data-aos="fade-up">
         <h2 style="color: #f187ab">Stats</h2>
         <p style="color: #f187ab">Toblox ID stats<br></p>
-      </div>
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
+    </div>
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
         <div class="row gy-4">
-          @forelse ($companyStats as $stat)
-            <div class="col-lg-3 col-md-6">
-              <div class="stats-item d-flex align-items-center w-100 h-100">
-                <div>
-                  <span style="color: #f187ab">{{$stat->goals}}</span>
-                  <p style="color: #f187ab; font-weight: bold;">{{$stat->title}}</p>
+            @forelse ($companyStats as $stat)
+                <div class="col-lg-3 col-md-6 col-10 mx-auto">
+                <div class="stats-item d-flex align-items-center w-100 h-100">
+                        <div>
+                            <span style="color: #f187ab">{{$stat->goals}}</span>
+                            <p style="color: #f187ab; font-weight: bold;">{{$stat->title}}</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          @empty
-            <p>Data Kosong</p>
-          @endforelse
+            @empty
+                <p>Data Kosong</p>
+            @endforelse
         </div>
-      </div>
-    </section>
+    </div>
+</section>
     <!-- /Stats Section -->
 
     <div class="section-spacer"></div>
