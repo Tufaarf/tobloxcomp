@@ -554,7 +554,7 @@ section[id] {                         /* kurangi jarak antar semua section */
     <section class="section pb-5">
       <div class="container">
         <div class="row g-4" id="itemList" data-aos="fade-up">
-          @foreach($items->take(4) as $item)
+          @foreach($items->take(100) as $item)
             <div class="col-6 col-md-3 item-card" data-game="{{ $item->game ? $item->game->id : '' }}">
               <a href="{{ route('front.product.detail', $item->id) }}" class="text-decoration-none">
                 <div class="card product-card h-100">

@@ -28,6 +28,8 @@ class RobuxPromoResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-sparkles';
 
+    public static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationGroup = 'Promo'; // Grup menu dalam B. Inggris
 
     protected static ?string $modelLabel = 'Robux Promo';

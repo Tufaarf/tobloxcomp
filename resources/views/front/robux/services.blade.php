@@ -270,7 +270,7 @@ section[id] {                                 /* kurangi jarak antar semua secti
           </div>
       </div>
 
-      <div class="robux-card" data-aos="fade-up" data-aos-delay="200">
+      {{-- <div class="robux-card" data-aos="fade-up" data-aos-delay="200">
         <h3>Robux Promo</h3>
         <p>
           Dapatkan Robux dengan harga promo spesial! Penawaran terbatas, proses cepat dan
@@ -279,7 +279,7 @@ section[id] {                                 /* kurangi jarak antar semua secti
         <div class="robux-card-footer">
           <a href="{{ route('promo.index') }}" class="btn-beli">Beli Sekarang</a>
           </div>
-      </div>
+      </div> --}}
 
     </div>
   </div>
