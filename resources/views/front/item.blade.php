@@ -236,7 +236,7 @@ section[id] {                         /* kurangi jarak antar semua section */
 
     <!-- Item List Column -->
     <div class="col-md-9">
-      <div class="row" id="itemList">
+      <div class="row g-3" id="itemList">
         @foreach($items as $item)
           <div class="col-6 col-md-3 item-card" data-game="{{ $item->game ? $item->game->id : '' }}">
               <a href="{{ route('front.product.detail', $item->id) }}" class="text-decoration-none">

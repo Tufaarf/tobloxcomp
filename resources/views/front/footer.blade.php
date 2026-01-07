@@ -19,7 +19,8 @@
           <ul>
             <li><i class="bi bi-chevron-right"></i> <a href="{{Route('front.index')}}">Home</a></li>
             <li><i class="bi bi-chevron-right"></i> <a href="{{Route('robux.topup')}}">Robux</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#">Cek Transaksi</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="{{Route('front.items')}}">Item</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="{{Route('order.track')}}">Cek Transaksi</a></li>
 
           </ul>
         </div>
