@@ -31,21 +31,21 @@ class HeroSectionResource extends Resource
                     ->label('Title')
                     ->maxLength(255),
 
-                Textarea::make('description')
-                    ->required()
-                    ->label('Description')
-                    ->maxLength(1000),
+                // Textarea::make('description')
+                //     ->required()
+                //     ->label('Description')
+                //     ->maxLength(1000),
 
-                TextInput::make('button_text')
-                    ->required()
-                    ->label('Button Text')
-                    ->maxLength(255),
+                // TextInput::make('button_text')
+                //     ->required()
+                //     ->label('Button Text')
+                //     ->maxLength(255),
 
-                TextInput::make('button_url')
-                    ->required()
-                    ->url()
-                    ->label('Button URL')
-                    ->maxLength(255),
+                // TextInput::make('button_url')
+                //     ->required()
+                //     ->url()
+                //     ->label('Button URL')
+                //     ->maxLength(255),
 
                 FileUpload::make('image_url')
                     ->required()
