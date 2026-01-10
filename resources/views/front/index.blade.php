@@ -56,8 +56,16 @@ section[id] {                         /* kurangi jarak antar semua section */
 }
 
 /* ===== Hero controls ===== */
+.hero-wrap{
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 12px;
+  padding-right: 12px;
+}
 .hero-img{
-  height: 320px; /* reduced from 420px */
+  width: 100%;
+  aspect-ratio: 24 / 10;
   object-fit: cover;
   display: block;
 }
@@ -72,8 +80,8 @@ section[id] {                         /* kurangi jarak antar semua section */
 .carousel-control-next{ right:-12px; }
 @media (max-width: 768px){
   body{ padding-top:64px; }
-  .hero-img{
-    height: 200px; /* reduced from 260px */
+  .hero-wrap{
+    max-width: 100%;
   }
   .carousel-control-prev{ left:-8px; }
   .carousel-control-next{ right:-8px; }
