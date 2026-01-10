@@ -210,6 +210,32 @@ header.header .navmenu a.active {
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+.result-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #f187ab;
+  background: #fff6fa;
+  border-radius: 16px;
+  margin-top: 16px;
+  text-align: left;
+}
+.result-card img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 10px rgba(241, 135, 171, .25);
+}
+.result-card .username {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #f187ab;
+}
 </style>
 
 @include('front.header')
@@ -238,14 +264,14 @@ header.header .navmenu a.active {
                       @csrf
                       <input type="hidden" name="product_id" value="{{ $product->id }}">
                       <div class="mb-3">
-                        <input type="text" id="username" name="username"
-                          class="form-control"
-                          style="background:#fbd3e2;border:none;border-radius:999px;height:48px;font-weight:600;color:#f187ab;"
-                          placeholder="Username Roblox"
-                          oninput="onUsernameInput()"
-                          value="{{ old('username') }}">
-                        <div class="d-flex justify-content-end mt-2">
-                          <button type="button" class="btn btn-checkout" style="width:auto;padding:6px 18px;border-radius:999px;font-weight:600;" onclick="verifyUsername()" id="btnVerify">Cek</button>
+                        <div class="d-flex gap-2">
+                          <input type="text" id="username" name="username"
+                            class="form-control"
+                            style="background:#fbd3e2;border:none;border-radius:999px;height:48px;font-weight:600;color:#f187ab;"
+                            placeholder="Username Roblox"
+                            oninput="onUsernameInput()"
+                            value="{{ old('username') }}">
+                          <button type="button" class="btn btn-checkout" style="width:auto;padding:0 24px;border-radius:999px;font-weight:600;white-space:nowrap;" onclick="verifyUsername()" id="btnVerify">Cek</button>
                         </div>
                         <div id="checkResult" class="mt-2 text-center"></div>
                       </div>
@@ -371,9 +397,9 @@ function verifyUsername() {
             isUserResolved = true;
             resolvedFor = data.username || uname;
             resultDiv.innerHTML = `
-                <div>
-                    <p class="m-0 fw-bold">@${data.username}</p>
-                    <p class="m-0 text-success fw-bold">Username valid</p>
+                <div class="result-card">
+                    <img src="${data.avatar}" alt="${data.username}">
+                    <div class="username">${data.username}</div>
                 </div>
             `;
         } else {

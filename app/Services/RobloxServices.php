@@ -40,14 +40,18 @@ class RobloxServices
             'userIds' => $userId,
             'size' => '150x150',
             'format' => 'Png',
-            'isCircular' => false,
+            'isCircular' => 'false',
         ]);
 
         if (!$response->successful() || empty($response->json('data.0.imageUrl'))) {
+            Log::error("Failed to fetch avatar for UserID {$userId}: " . $response->body());
             return null;
         }
 
-        return $response->json('data.0.imageUrl');
+        $url = $response->json('data.0.imageUrl');
+        Log::info("Fetched avatar for UserID {$userId}: {$url}");
+
+        return $url;
     }
 
     /**
