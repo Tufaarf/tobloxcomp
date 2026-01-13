@@ -24,7 +24,7 @@
         transition: max-height 0.3s ease;
     }
 
-    /* Navigasi */
+    /* Navigasi Desktop */
     .custom-header .navigation ul {
         margin: 0;
         padding: 0;
@@ -53,34 +53,95 @@
         background-color: #ffffff;
     }
 
+    /* Hamburger Menu Button (Hidden on Desktop) */
+    .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 21px;
+        cursor: pointer;
+        z-index: 1031;
+    }
+
+    .menu-toggle span {
+        display: block;
+        width: 100%;
+        height: 3px;
+        background: #ffffff;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+    }
 
     /* === Responsif untuk Mobile === */
     @media (max-width: 768px) {
         .custom-header {
-            padding: 10px 0;
+            padding: 20px 0;
         }
 
         .custom-header .logo img {
-            max-height: 32px;
+            max-height: 40px;
+        }
+
+        .menu-toggle {
+            display: flex;
+        }
+
+        .custom-header .navigation {
+            position: fixed;
+            top: 0;
+            right: -100%; /* Sembunyikan di kanan */
+            width: 250px;
+            height: 100vh;
+            background: #f187ab;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            padding-top: 60px;
+            transition: right 0.3s ease;
+            z-index: 1029;
+        }
+
+        .custom-header .navigation.active {
+            right: 0; /* Munculkan */
         }
 
         .custom-header .navigation ul {
-            gap: 5px;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .custom-header .navigation ul li {
+            width: 100%;
         }
 
         .custom-header .navigation a {
-            padding: 4px 8px;
-            font-size: 12px;
+            display: block;
+            padding: 15px 20px;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 0;
+        }
+        
+        .custom-header .navigation a:hover, 
+        .custom-header .navigation a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        /* Animasi Hamburger saat aktif */
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
         }
     }
 
     /* Extra Small Devices */
     @media (max-width: 576px) {
-        .custom-header .navigation a {
-            padding: 3px 6px;
-            font-size: 11px;
-        }
-
         .custom-header .logo img {
             max-height: 28px;
         }
@@ -94,7 +155,14 @@
             <img src="{{ asset('assets/img/logo/logo1.png') }}" alt="Logo Mayoblox">
         </a>
 
-        <nav class="navigation">
+        <!-- Hamburger Menu Button -->
+        <div class="menu-toggle" id="mobile-menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <nav class="navigation" id="main-navigation">
             <ul>
                 <li><a href="{{ Route('front.index') }}" class="{{ Route::is('front.index') ? 'active' : '' }}">Home</a></li>
                 <li><a href="{{ Route('robux.services') }}" class="{{ Route::is('robux.services', 'robux.topup') ? 'active' : '' }}">Robux</a></li>
@@ -106,3 +174,23 @@
 
     </div>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.getElementById('mobile-menu-toggle');
+        const navigation = document.getElementById('main-navigation');
+
+        menuToggle.addEventListener('click', function() {
+            menuToggle.classList.toggle('active');
+            navigation.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!navigation.contains(event.target) && !menuToggle.contains(event.target)) {
+                menuToggle.classList.remove('active');
+                navigation.classList.remove('active');
+            }
+        });
+    });
+</script>
