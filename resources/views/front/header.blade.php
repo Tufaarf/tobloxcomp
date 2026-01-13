@@ -99,7 +99,7 @@
                 <li><a href="{{ Route('front.index') }}" class="{{ Route::is('front.index') ? 'active' : '' }}">Home</a></li>
                 <li><a href="{{ Route('robux.services') }}" class="{{ Route::is('robux.services', 'robux.topup') ? 'active' : '' }}">Robux</a></li>
                 {{-- <li><a href="{{ Route('promo.index') }}" class="{{ Route::is('promo.index') ? 'active' : '' }}">Robux Promo</a></li> --}}
-                <li><a href="{{ Route('front.items') }}" class="{{ Route::is('front.items.*') ? 'active' : '' }}">Item</a></li>
+                <li><a href="{{ Route('front.items') }}" class="{{ Route::is('front.items', 'front.items.*') ? 'active' : '' }}">Item</a></li>
                 <li><a href="{{ Route('order.track') }}" class="{{ Route::is('order.track') ? 'active' : '' }}">Cek Transaksi</a></li>
             </ul>
         </nav>
