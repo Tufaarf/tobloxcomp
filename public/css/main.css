@@ -75,7 +75,7 @@
 body {
   color: var(--default-color);
   background-color: var(--background-color);
-  font-family: var(--default-font);
+  font-family: var(--default-font) !important;
 }
 
 a {
@@ -96,7 +96,7 @@ h4,
 h5,
 h6 {
   color: var(--heading-color);
-  font-family: var(--heading-font);
+  font-family: var(--heading-font) !important;
 }
 
 /* PHP Email Form Messages
@@ -340,7 +340,7 @@ h6 {
     color: var(--nav-color);
     font-size: 13px;
     padding: 0 2px;
-    font-family: var(--nav-font);
+    font-family: var(--nav-font) !important;
     font-weight: 500;
     display: flex;
     align-items: center;
