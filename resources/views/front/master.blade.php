@@ -25,7 +25,7 @@
   <link href="{{asset('assets/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="{{asset('css/main.css')}}" rel="stylesheet">
+  <link href="{{asset('css/main.css')}}?v={{ time() }}" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Dewi
