@@ -50,23 +50,6 @@ class CompanyStatsResource extends Resource
                     ->label('Angka')
                     ->sortable(),
             ])
-            ->headerActions([
-                CreateAction::make()
-                    ->modalHeading('Tambah Statistik')
-                    ->modalButton('Buat')
-                    ->form([
-                        TextInput::make('title')
-                            ->label('Judul Statistik')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('goals')
-                            ->label('Angka')
-                            ->required()
-                            ->numeric()
-                            ->minValue(0),
-                    ])
-                    ->action(fn (array $data) => CompanyStats::create($data)),
-            ])
             ->actions([
                 EditAction::make()
                     ->modalHeading('Ubah Statistik')
