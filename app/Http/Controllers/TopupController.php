@@ -47,7 +47,7 @@ class TopupController extends Controller
         abort_unless($pm, 422, 'Metode pembayaran tidak valid.');
 
         // hitung harga server-side (anti manipulasi)
-        $pricePer50 = (int) config('topup.price_per_50', 7000);
+        $pricePer50 = \App\Models\RobuxSetting::getPricePer50();
         $base  = (int) round(($data['robux_amount'] / 50) * $pricePer50);
         $rate  = 0;
         $tax   = 0;

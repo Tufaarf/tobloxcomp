@@ -9,7 +9,7 @@ class TopupPageController extends Controller
 {
     public function show()
     {
-        $pricePer50 = (int) config('topup.price_per_50', 7000);
+        $pricePer50 = \App\Models\RobuxSetting::getPricePer50();
 
         $paymentMethods = \App\Models\PaymentMethod::all()
             ->map(function ($pm) {
