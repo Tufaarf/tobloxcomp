@@ -195,27 +195,7 @@ section[id] {                         /* kurangi jarak antar semua section */
   <main class="main">
 
     <!-- Hero Section -->
-    <section class="hero-wrap container-xxl px-3" id="hero">
-  @if($herosections->count() > 0)
-  <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-    <div class="carousel-inner rounded-4 shadow-lg overflow-hidden">
-      @foreach($herosections as $i => $hero)
-        <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
-          <img src="{{ Storage::url($hero->image_url) }}" class="d-block w-100 hero-img" alt="Hero {{ $i+1 }}">
-        </div>
-      @endforeach
-    </div>
-    <button class="carousel-control-prev hero-ctrl" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon hero-ctrl-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Prev</span>
-    </button>
-    <button class="carousel-control-next hero-ctrl" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon hero-ctrl-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-  @endif
-</section>
+
 
 <!-- Game Items Section -->
 <section class="container my-3">
