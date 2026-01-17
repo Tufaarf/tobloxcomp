@@ -46,6 +46,14 @@ class ItemOrderResource extends Resource
                 TextInput::make('total_price')
                     ->required()
                     ->numeric(),
+                Forms\Components\FileUpload::make('payment_proof')
+                    ->label('Bukti Pembayaran')
+                    ->disk('public')
+                    ->directory('payment_proofs')
+                    ->imagePreviewHeight('250')
+                    ->openable()
+                    ->downloadable()
+                    ->disabled(),
                 Select::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -82,6 +90,7 @@ class ItemOrderResource extends Resource
                 // Add filters for status
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ]);

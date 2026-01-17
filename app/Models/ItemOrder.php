@@ -21,6 +21,7 @@ class ItemOrder extends Model
         'item_price',
         'total_price',
         'status',
+        'payment_proof',
     ];
 
     // Relasi dengan model Item
