@@ -56,14 +56,16 @@ header.header .navmenu a.active {
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  max-width: 80%; /* Resize the image */
-  display: block;
-  margin: 0 auto; /* Center the image */
+  width: 100%;
+  max-width: 1920px; /* Maximize to 1920px if container allows, but keep responsive */
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
 }
 
 .product-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 

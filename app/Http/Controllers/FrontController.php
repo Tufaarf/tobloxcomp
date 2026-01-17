@@ -93,14 +93,22 @@ class FrontController extends Controller
     public function productDetail($id)
     {
         $product = \App\Models\Item::with('game')->findOrFail($id);
-        $paymentMethods = collect(config('topup.methods', []))
-            ->map(function ($m, $code) {
+        $paymentMethods = \App\Models\PaymentMethod::all()
+            ->map(function ($pm) {
+                $target = $pm->account_number . ($pm->account_holder_name ? ' (' . $pm->account_holder_name . ')' : '');
+                $type   = 'text';
+
+                if ($pm->type === 'qris') {
+                    $type = 'image';
+                    $target = $pm->qris_image ? \Illuminate\Support\Facades\Storage::url($pm->qris_image) : asset('images/qris-placeholder.png');
+                }
+
                 return [
-                    'code'   => $code,
-                    'name'   => $m['name'],
-                    'fee'    => (float) $m['fee'],
-                    'type'   => $m['type'],     // text|image
-                    'target' => $m['target'],   // nomor / path gambar
+                    'code'   => $pm->code,
+                    'name'   => $pm->name,
+                    'fee'    => 0,
+                    'type'   => $type,
+                    'target' => $target,
                 ];
             })->values();
         return view('front.detail-product', compact('product', 'paymentMethods'));
@@ -117,14 +125,22 @@ class FrontController extends Controller
         $pricePer50 = (int) config('topup.price_per_50', 7000);
 
         // siapkan array methods utk Blade
-        $paymentMethods = collect(config('topup.methods', []))
-            ->map(function ($m, $code) {
+        $paymentMethods = \App\Models\PaymentMethod::all()
+            ->map(function ($pm) {
+                $target = $pm->account_number . ($pm->account_holder_name ? ' (' . $pm->account_holder_name . ')' : '');
+                $type   = 'text';
+
+                if ($pm->type === 'qris') {
+                    $type = 'image';
+                    $target = $pm->qris_image ? \Illuminate\Support\Facades\Storage::url($pm->qris_image) : asset('images/qris-placeholder.png');
+                }
+
                 return [
-                    'code'   => $code,
-                    'name'   => $m['name'],
-                    'fee'    => (float) $m['fee'],
-                    'type'   => $m['type'],     // text|image
-                    'target' => $m['target'],   // nomor / path gambar
+                    'code'   => $pm->code,
+                    'name'   => $pm->name,
+                    'fee'    => 0,
+                    'type'   => $type,
+                    'target' => $target,
                 ];
             })->values();
 
