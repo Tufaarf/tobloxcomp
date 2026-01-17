@@ -557,7 +557,10 @@ function onPaymentChange() {
   if (type === 'image') {
     box.innerHTML = `
       <div class="text-muted mb-2">Scan QR <b>${name}</b> di bawah ini:</div>
-      <img src="${target}" alt="QR ${name}" style="max-width:100%;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08)">
+      <img src="${target}" alt="QR ${name}" style="max-width:100%;max-height:300px;object-fit:contain;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08)">
+      <div class="mt-2 text-center">
+        <a href="${target}" download="QRIS-TOBLOX.jpg" class="btn btn-sm btn-pink">Download QRIS</a>
+      </div>
     `;
   } else {
     box.innerHTML = `

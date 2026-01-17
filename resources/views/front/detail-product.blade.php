@@ -194,6 +194,8 @@ header.header .navmenu a.active {
   border-radius: 12px;
   width: 400px;
   max-width: 100%;
+  max-height: 90vh; /* Limit height */
+  overflow-y: auto; /* Enable scrolling */
 }
 
 .modal-header {
@@ -431,7 +433,10 @@ function updatePrice() {
     if (selectedMethod.dataset.type === 'image') {
         payInfoDiv.innerHTML = `
             <div class="mb-2"><b>Scan QR ${selectedMethod.dataset.name}:</b></div>
-            <img src="${selectedMethod.dataset.target}" alt="QR ${selectedMethod.dataset.name}" style="max-width:100%;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08)">
+            <img src="${selectedMethod.dataset.target}" alt="QR ${selectedMethod.dataset.name}" style="max-width:100%;max-height:300px;object-fit:contain;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08)">
+            <div class="mt-2 text-center">
+                <a href="${selectedMethod.dataset.target}" download="QRIS-TOBLOX.jpg" class="btn btn-sm btn-secondary" style="background:#f187ab;color:#fff;border:none;">Download QRIS</a>
+            </div>
             <div class="mt-2"><b>Total Harga:</b> Rp ${totalPrice.toLocaleString('id-ID')}</div>
         `;
     } else {
