@@ -67,7 +67,15 @@ class ItemOrderResource extends Resource
                 TextColumn::make('game_name'),
                 TextColumn::make('item_price'),
                 TextColumn::make('total_price'),
-                TextColumn::make('status'),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'paid' => 'info',
+                        'shipped' => 'primary',
+                        'completed' => 'success',
+                        default => 'gray',
+                    }),
                 TextColumn::make('created_at')->dateTime(),
             ])
             ->filters([

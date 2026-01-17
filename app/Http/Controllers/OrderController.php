@@ -40,11 +40,18 @@ class OrderController extends Controller
             // Ambil data produk dengan relasi game
             $product = Item::with('game')->findOrFail($request->product_id);
 
-            // Hitung total dengan tax dari config
-            $paymentMethods = config('topup.methods');
-            $selectedMethod = $paymentMethods[$request->payment_method] ?? null;
-            $taxRate = $selectedMethod['fee'] ?? 0;
-            $tax = round($product->price * ($taxRate / 100));
+            // Verifikasi payment method dari DB
+            $pm = \App\Models\PaymentMethod::where('code', $request->payment_method)->first();
+            if (!$pm) {
+                 return response()->json([
+                    'success' => false,
+                    'message' => 'Metode pembayaran tidak valid.',
+                ], 422);
+            }
+
+            // Tax = 0
+            $taxRate = 0;
+            $tax = 0;
             $totalPrice = $product->price + $tax;
 
             // Simpan data order dengan informasi game

@@ -375,7 +375,6 @@ input[type="range"]::-webkit-slider-thumb {
         <div class="card summary-card p-4 sticky-top">
           <h5 class="mb-3">Rincian Pembayaran</h5>
           <p class="summary-row"><span class="label">Harga Robux</span><span class="value"><span class="rp">Rp</span> <span id="priceOnly" class="price-num">7000</span></span></p>
-          <p class="summary-row"><span class="label">Pajak</span><span class="value"><span class="rp">Rp</span> <span id="taxAmount" class="price-num">0</span></span></p>
           <p class="summary-row total"><span class="label">Total</span><span class="value"><span class="rp">Rp</span> <span id="totalPrice" class="price-num">7000</span></span></p>
 
           <button id="submitBtn" class="btn btn-lg btn-pink w-100 mt-3" type="button" onclick="openVideoGate()" disabled>Checkout</button>
@@ -442,7 +441,7 @@ input[type="range"]::-webkit-slider-thumb {
               data-target="{{ $pm['target'] }}"
               data-name="{{ $pm['name'] }}"
               @selected(old('payment_method') === $pm['code'])>
-              {{ $pm['name'] }} ({{ rtrim(rtrim(number_format($pm['fee'],2,',','.'),'0'),',') }}%)
+              {{ $pm['name'] }}
             </option>
           @endforeach
         </select>
@@ -480,14 +479,14 @@ function updatePrice() {
   const robux = +document.getElementById('robuxSlider').value;
   const method = document.getElementById('paymentMethod');
   const basePrice = (robux / 50) * pricePer50;
-  const taxRate = parseFloat(method?.options[method.selectedIndex].dataset.tax || '0');
-  const tax = Math.round(basePrice * (taxRate / 100));
-  const total = basePrice + tax;
+  // No Tax
+  const tax = 0;
+  const total = basePrice;
 
   document.getElementById('robuxAmount').innerText = robux;
   document.getElementById('robuxPrice').innerText  = formatIDR(basePrice);
   document.getElementById('priceOnly').innerText   = formatIDR(basePrice);
-  document.getElementById('taxAmount').innerText   = formatIDR(tax);
+  // document.getElementById('taxAmount').innerText   = formatIDR(tax); // Removed
   document.getElementById('totalPrice').innerText  = formatIDR(total);
 }
 

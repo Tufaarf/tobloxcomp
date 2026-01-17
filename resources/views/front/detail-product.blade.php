@@ -326,7 +326,7 @@ header.header .navmenu a.active {
           data-target="{{ $pm['target'] }}"
           data-name="{{ $pm['name'] }}"
           @selected(old('payment_method') === $pm['code'])>
-          {{ $pm['name'] }} ({{ rtrim(rtrim(number_format($pm['fee'],2,',','.'),'0'),',') }}%)
+          {{ $pm['name'] }}
         </option>
       @endforeach
     </select>
@@ -420,10 +420,9 @@ function verifyUsername() {
 function updatePrice() {
     const paymentMethodSelect = document.getElementById('paymentMethod');
     const selectedMethod = paymentMethodSelect.options[paymentMethodSelect.selectedIndex];
-    const taxRate = parseFloat(selectedMethod.dataset.tax || 0);
+    // No Tax
     const basePrice = parseFloat("{{ $product->price }}");
-    const tax = Math.round(basePrice * (taxRate / 100));
-    const totalPrice = basePrice + tax;
+    const totalPrice = basePrice;
 
     // Tampilkan info pembayaran sesuai tipe
     const payInfoDiv = document.getElementById('payInfo');

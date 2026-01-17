@@ -34,7 +34,7 @@ class TopupController extends Controller
             'roblox_user_id'  => 'nullable|string',
             'avatar_url'      => 'nullable|string',
             'robux_amount'    => 'required|integer|min:50|max:5000',
-            'payment_method'  => 'required|string|in:qris,gopay,seabank',
+            'payment_method'  => 'required|string|exists:payment_methods,code',
             'wa_number'       => 'required|string|min:10|max:20',
             'payment_proof'   => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
             // jika kamu masih mengirim teks bukti di meta, ini opsional:
@@ -42,15 +42,15 @@ class TopupController extends Controller
         ]);
 
         // ambil metode dari config
-        $methods = config('topup.methods', []);
-        $method  = $methods[$data['payment_method']] ?? null;
-        abort_unless($method, 422, 'Metode pembayaran tidak valid.');
+        // ambil metode dari DB
+        $pm = \App\Models\PaymentMethod::where('code', $data['payment_method'])->first();
+        abort_unless($pm, 422, 'Metode pembayaran tidak valid.');
 
         // hitung harga server-side (anti manipulasi)
         $pricePer50 = (int) config('topup.price_per_50', 7000);
         $base  = (int) round(($data['robux_amount'] / 50) * $pricePer50);
-        $rate  = (float) $method['fee'];
-        $tax   = (int) round($base * ($rate / 100));
+        $rate  = 0;
+        $tax   = 0;
         $total = $base + $tax;
 
         // generate ORDER ID unik: RBX-YYMMDD-ABCDE
@@ -81,8 +81,8 @@ class TopupController extends Controller
             'total_price'    => $total,
 
             'payment_method' => $data['payment_method'],
-            'pay_to'         => $method['target'],
-            'pay_to_type'    => $method['type'],
+            'pay_to'         => $pm->type === 'qris' && $pm->qris_image ? Storage::url($pm->qris_image) : $pm->account_number,
+            'pay_to_type'    => $pm->type === 'qris' ? 'image' : 'text',
             'wa_number'      => $data['wa_number'],
 
             'payment_proof_path' => $proofPath,

@@ -12,26 +12,23 @@ class PromoController extends Controller
    public function index(){
 
 
-    $paymentMethods = collect(config('topup.methods', []))
-            ->map(function ($m, $code) {
-                $target = $m['target'];
-                if (($m['type'] ?? 'text') === 'image') {
-                    // Buat URL absolut agar tidak 404
-                    if (Str::startsWith($target, ['http://', 'https://'])) {
-                        // sudah URL
-                    } elseif (Storage::disk('public')->exists($target)) {
-                        $target = Storage::url($target); // /storage/...
-                    } else {
-                        // fallback ke public/ jika ada
-                        $target = asset($target);
-                    }
+    $paymentMethods = \App\Models\PaymentMethod::all()
+            ->map(function ($pm) {
+                // Determine target based on type
+                $target = $pm->account_number . ($pm->account_holder_name ? ' (' . $pm->account_holder_name . ')' : '');
+                $type   = 'text';
+
+                if ($pm->type === 'qris') {
+                    $type = 'image';
+                    $target = $pm->qris_image ? \Illuminate\Support\Facades\Storage::url($pm->qris_image) : asset('images/qris-placeholder.png');
                 }
+
                 return [
-                    'code'   => $code,
-                    'name'   => $m['name'],
-                    'fee'    => (float) $m['fee'],
-                    'type'   => $m['type'],
-                    'target' => $target, // sudah final (URL untuk image, teks untuk yang lain)
+                    'code'   => $pm->code,
+                    'name'   => $pm->name,
+                    'fee'    => 0,
+                    'type'   => $type,
+                    'target' => $target,
                 ];
             })->values();
 

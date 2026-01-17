@@ -51,16 +51,16 @@ class TopupOrderResource extends Resource
     return $table
         ->defaultSort('id', 'desc')
         ->columns([
-            Tables\Columns\TextColumn::make('id')->sortable(),
+            // Tables\Columns\TextColumn::make('id')->sortable(),
             Tables\Columns\TextColumn::make('order_id')->label('Order ID')->searchable()->copyable(),
             Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y H:i')->sortable(),
             Tables\Columns\TextColumn::make('username')->searchable(),
             Tables\Columns\TextColumn::make('robux_amount')->label('Robux')->sortable(),
             Tables\Columns\TextColumn::make('payment_method')->label('Method'),
-            Tables\Columns\TextColumn::make('pay_to')
-                ->label('Tujuan')
-                ->limit(24)
-                ->tooltip(fn (string $state): ?string => $state),
+            // Tables\Columns\TextColumn::make('pay_to')
+            //     ->label('Tujuan')
+            //     ->limit(24)
+            //     ->tooltip(fn (string $state): ?string => $state),
             Tables\Columns\TextColumn::make('total_price')->money('IDR', true)->label('Total'),
             Tables\Columns\TextColumn::make('status')
                 ->label('Status')
