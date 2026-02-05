@@ -427,20 +427,20 @@
 
             if (selectedMethod.dataset.type === 'image') {
                 payInfoDiv.innerHTML = `
-                                <div class="mb-2"><b>Scan QR ${selectedMethod.dataset.name}:</b></div>
-                                <img src="${selectedMethod.dataset.target}" alt="QR" style="max-width:100%;max-height:300px;object-fit:contain;border-radius:12px;">
-                                <div class="mt-2 text-center">
-                                     <a href="${selectedMethod.dataset.target}" download="QRIS.jpg" class="btn btn-sm btn-secondary" style="background:#f187ab;color:#fff;border:none;">Download QR</a>
-                                </div>
-                                <div class="mt-2"><b>Total:</b> Rp ${price.toLocaleString('id-ID')}</div>
-                            `;
+                                            <div class="mb-2"><b>Scan QR ${selectedMethod.dataset.name}:</b></div>
+                                            <img src="${selectedMethod.dataset.target}" alt="QR" style="max-width:100%;max-height:300px;object-fit:contain;border-radius:12px;">
+                                            <div class="mt-2 text-center">
+                                                 <a href="${selectedMethod.dataset.target}" download="QRIS.jpg" class="btn btn-sm btn-secondary" style="background:#f187ab;color:#fff;border:none;">Download QR</a>
+                                            </div>
+                                            <div class="mt-2"><b>Total:</b> Rp ${price.toLocaleString('id-ID')}</div>
+                                        `;
             } else {
                 payInfoDiv.innerHTML = `
-                                <div class="mb-2"><b>Tujuan ${selectedMethod.dataset.name}:</b></div>
-                                <div class="fw-bold fs-5" id="payTarget">${selectedMethod.dataset.target}</div>
-                                <button class="btn btn-sm btn-outline-primary mt-2" type="button" onclick="copyPayTarget()">Copy</button>
-                                <div class="mt-2"><b>Total:</b> Rp ${price.toLocaleString('id-ID')}</div>
-                            `;
+                                            <div class="mb-2"><b>Tujuan ${selectedMethod.dataset.name}:</b></div>
+                                            <div class="fw-bold fs-5" id="payTarget">${selectedMethod.dataset.target}</div>
+                                            <button class="btn btn-sm btn-outline-primary mt-2" type="button" onclick="copyPayTarget()">Copy</button>
+                                            <div class="mt-2"><b>Total:</b> Rp ${price.toLocaleString('id-ID')}</div>
+                                        `;
             }
         }
 
@@ -492,13 +492,36 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    await Swal.fire({
+                    // Success Alert with Order ID and Buttons
+                    Swal.fire({
                         icon: 'success',
-                        title: 'Berhasil!',
-                        text: data.message,
-                        timer: 2000
+                        title: 'Order Berhasil!',
+                        html: `
+                                        <p class="mb-2">Order ID Anda:</p>
+                                        <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
+                                            <h3 class="m-0" style="color:#f187ab; font-weight:800;" id="successOrderId">${data.order_id}</h3>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="copyOrderId('${data.order_id}')">
+                                                Copy
+                                            </button>
+                                        </div>
+                                        <p class="small text-muted mb-0">Silahkan simpan Order ID ini untuk cek status transaksi.</p>
+                                    `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Track Order',
+                        cancelButtonText: 'Kembali ke Beranda',
+                        confirmButtonColor: '#f187ab',
+                        cancelButtonColor: '#6c757d',
+                        reverseButtons: true,
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = data.redirect_url;
+                        } else {
+                            window.location.href = "{{ url('/') }}";
+                        }
                     });
-                    window.location.href = data.redirect_url;
+
+
                 } else {
                     if (data.errors) {
                         const errorMessages = Object.values(data.errors).flat().join('\n');
@@ -520,6 +543,23 @@
                 Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan jaringan' });
             }
         });
+
+        // Global function for SweetAlert
+        function copyOrderId(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Visual feedback inside Swal
+                const btn = Swal.getHtmlContainer().querySelector('button.btn-outline-secondary');
+                if (btn) {
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = 'Copied!';
+                    btn.classList.replace('btn-outline-secondary', 'btn-success');
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.classList.replace('btn-success', 'btn-outline-secondary');
+                    }, 2000);
+                }
+            });
+        }
 
     </script>
 
