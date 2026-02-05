@@ -40,4 +40,13 @@ Route::post('/api/roblox/resolve', [RobloxProxyController::class, 'resolve'])
  * ->name('roblox.resolve');
  * Route::get('/api/roblox/check-experience/{userId}', [RobloxProxyController::class, 'experience'])
  * ->name('roblox.experience');
-*/
+ */
+
+use App\Http\Controllers\Front\AccountController;
+
+Route::prefix('account')->name('account.')->group(function () {
+    Route::get('/', [AccountController::class, 'index'])->name('index');
+    Route::get('/track', [AccountController::class, 'track'])->name('track');
+    Route::get('/{id}', [AccountController::class, 'show'])->name('show');
+    Route::post('/order', [AccountController::class, 'store'])->name('store');
+});

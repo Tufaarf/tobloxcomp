@@ -11,7 +11,13 @@ class Game extends Model
 
     protected $fillable = ['name', 'icon'];
 
-    public function items(){
+    public function items()
+    {
         return $this->hasMany(Item::class);
+    }
+
+    public function accountProducts()
+    {
+        return $this->hasMany(AccountProduct::class);
     }
 }

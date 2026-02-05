@@ -8,7 +8,8 @@
     /* Style Utama Header */
     .custom-header {
         background: #f187ab;
-        padding: 15px 0; /* Diperbesar dari 12px */
+        padding: 15px 0;
+        /* Diperbesar dari 12px */
         position: fixed;
         top: 0;
         left: 0;
@@ -20,7 +21,8 @@
 
     /* Logo */
     .custom-header .logo img {
-        max-height: 45px; /* Diperbesar dari 40px */
+        max-height: 45px;
+        /* Diperbesar dari 40px */
         transition: max-height 0.3s ease;
     }
 
@@ -90,18 +92,20 @@
         .custom-header .navigation {
             position: fixed;
             top: 0;
-            right: -100%; /* Sembunyikan di kanan */
+            right: -100%;
+            /* Sembunyikan di kanan */
             width: 250px;
             height: 100vh;
             background: #f187ab;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
             padding-top: 60px;
             transition: right 0.3s ease;
             z-index: 1029;
         }
 
         .custom-header .navigation.active {
-            right: 0; /* Munculkan */
+            right: 0;
+            /* Munculkan */
         }
 
         .custom-header .navigation ul {
@@ -121,8 +125,8 @@
             width: 100%;
             border-radius: 0;
         }
-        
-        .custom-header .navigation a:hover, 
+
+        .custom-header .navigation a:hover,
         .custom-header .navigation a.active {
             background-color: rgba(255, 255, 255, 0.2);
             color: #fff;
@@ -132,9 +136,11 @@
         .menu-toggle.active span:nth-child(1) {
             transform: translateY(9px) rotate(45deg);
         }
+
         .menu-toggle.active span:nth-child(2) {
             opacity: 0;
         }
+
         .menu-toggle.active span:nth-child(3) {
             transform: translateY(-9px) rotate(-45deg);
         }
@@ -164,11 +170,18 @@
 
         <nav class="navigation" id="main-navigation">
             <ul>
-                <li><a href="{{ Route('front.index') }}" class="{{ Route::is('front.index') ? 'active' : '' }}">Home</a></li>
-                <li><a href="{{ Route('robux.services') }}" class="{{ Route::is('robux.services', 'robux.topup') ? 'active' : '' }}">Robux</a></li>
-                {{-- <li><a href="{{ Route('promo.index') }}" class="{{ Route::is('promo.index') ? 'active' : '' }}">Robux Promo</a></li> --}}
-                <li><a href="{{ Route('front.items') }}" class="{{ Route::is('front.items', 'front.items.*') ? 'active' : '' }}">Item</a></li>
-                <li><a href="{{ Route('order.track') }}" class="{{ Route::is('order.track') ? 'active' : '' }}">Cek Transaksi</a></li>
+                <li><a href="{{ Route('front.index') }}" class="{{ Route::is('front.index') ? 'active' : '' }}">Home</a>
+                </li>
+                <li><a href="{{ Route('robux.services') }}"
+                        class="{{ Route::is('robux.services', 'robux.topup') ? 'active' : '' }}">Robux</a></li>
+                {{-- <li><a href="{{ Route('promo.index') }}"
+                        class="{{ Route::is('promo.index') ? 'active' : '' }}">Robux Promo</a></li> --}}
+                <li><a href="{{ Route('front.items') }}"
+                        class="{{ Route::is('front.items', 'front.items.*') ? 'active' : '' }}">Item</a></li>
+                <li><a href="{{ Route('account.index') }}"
+                        class="{{ Route::is('account.index', 'account.show') ? 'active' : '' }}">Akun Game</a></li>
+                <li><a href="{{ Route('order.track') }}" class="{{ Route::is('order.track') ? 'active' : '' }}">Cek
+                        Transaksi</a></li>
             </ul>
         </nav>
 
@@ -176,17 +189,17 @@
 </header>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const menuToggle = document.getElementById('mobile-menu-toggle');
         const navigation = document.getElementById('main-navigation');
 
-        menuToggle.addEventListener('click', function() {
+        menuToggle.addEventListener('click', function () {
             menuToggle.classList.toggle('active');
             navigation.classList.toggle('active');
         });
 
         // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (!navigation.contains(event.target) && !menuToggle.contains(event.target)) {
                 menuToggle.classList.remove('active');
                 navigation.classList.remove('active');
