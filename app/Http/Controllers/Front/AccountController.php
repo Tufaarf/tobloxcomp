@@ -29,7 +29,25 @@ class AccountController extends Controller
     public function show($id)
     {
         $item = AccountProduct::with('game')->findOrFail($id);
-        $paymentMethods = PaymentMethod::all(); // Fetch payment methods
+        $paymentMethods = PaymentMethod::all()
+            ->map(function ($pm) {
+                $target = $pm->account_number . ($pm->account_holder_name ? ' (' . $pm->account_holder_name . ')' : '');
+                $type = 'text';
+
+                if ($pm->type === 'qris') {
+                    $type = 'image';
+                    $target = $pm->qris_image ? \Illuminate\Support\Facades\Storage::url($pm->qris_image) : asset('images/qris-placeholder.png');
+                }
+
+                return [
+                    'code' => $pm->code,
+                    'name' => $pm->name,
+                    'fee' => 0,
+                    'type' => $type,
+                    'target' => $target,
+                ];
+            })->values();
+
         return view('front.account.show', compact('item', 'paymentMethods'));
     }
 
