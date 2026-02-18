@@ -33,8 +33,7 @@ class CompanyStatsResource extends Resource
                 TextInput::make('goals')
                     ->label('Angka')
                     ->required()
-                    ->numeric()
-                    ->minValue(0),
+                    ->rule('regex:/^[\d.,]+$/'),
             ]);
     }
 
@@ -62,17 +61,16 @@ class CompanyStatsResource extends Resource
                         TextInput::make('goals')
                             ->label('Angka')
                             ->required()
-                            ->numeric()
-                            ->minValue(0),
+                            ->rule('regex:/^[\d.,]+$/'),
                     ])
 
-                    ->mutateFormDataUsing(fn (array $data) => $data)
-                    ->action(fn (CompanyStats $record, array $data) => $record->update($data)),
-                      DeleteAction::make() // ✅ Delete button
-                        ->modalHeading('Hapus Statistik')
-                        ->modalButton('Hapus')
-                        ->requiresConfirmation()
-                        ->action(fn (CompanyStats $record) => $record->delete()),
+                    ->mutateFormDataUsing(fn(array $data) => $data)
+                    ->action(fn(CompanyStats $record, array $data) => $record->update($data)),
+                DeleteAction::make() // ✅ Delete button
+                    ->modalHeading('Hapus Statistik')
+                    ->modalButton('Hapus')
+                    ->requiresConfirmation()
+                    ->action(fn(CompanyStats $record) => $record->delete()),
             ])
             ->bulkActions([]);
     }
