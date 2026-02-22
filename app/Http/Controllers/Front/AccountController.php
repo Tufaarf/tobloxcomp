@@ -7,6 +7,7 @@ use App\Models\AccountOrder;
 use App\Models\AccountProduct;
 use App\Models\Game; // Assuming Game model is needed for filtering
 use App\Models\PaymentMethod; // Assuming we need payment methods
+use App\Services\FonnteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -21,7 +22,7 @@ class AccountController extends Controller
         }
 
         $items = $query->latest()->get();
-        $games = Game::has('accountProducts')->get(); // Optimally only get games that have products? Or all games.
+        $games = Game::has('accountProducts')->get();
 
         return view('front.account.index', compact('items', 'games'));
     }
@@ -80,17 +81,20 @@ class AccountController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'payment_method' => $request->payment_method,
-            'total_price' => $product->price, // Assuming no extra fees for now
+            'total_price' => $product->price,
             'status' => 'review',
         ]);
 
-        // Reduce stock?
-        // Usually stock is reduced on payment or immediately. Let's reduce immediately for now or keep it.
-        // User didn't specify, but "stok nya berapa" implies management.
-        // I'll decrement stock.
         $product->decrement('stock');
 
-        // Allow JSON response for AJAX/Fetch requests (Fix for Network Error)
+        // Kirim notifikasi WhatsApp ke admin via Fonnte
+        try {
+            (new FonnteService())->notifyNewAccountOrder($order);
+        } catch (\Exception $e) {
+            \Log::error('Fonnte notification failed: ' . $e->getMessage());
+        }
+
+
         if ($request->wantsJson() || $request->ajax() || $request->header('Accept') === 'application/json') {
             session()->flash('success', 'Pesanan berhasil dibuat! Silahkan simpan Order ID anda.');
             return response()->json([

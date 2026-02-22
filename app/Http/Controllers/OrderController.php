@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemOrder;
 use App\Models\Item;
+use App\Services\FonnteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -43,7 +44,7 @@ class OrderController extends Controller
             // Verifikasi payment method dari DB
             $pm = \App\Models\PaymentMethod::where('code', $request->payment_method)->first();
             if (!$pm) {
-                 return response()->json([
+                return response()->json([
                     'success' => false,
                     'message' => 'Metode pembayaran tidak valid.',
                 ], 422);
@@ -55,7 +56,7 @@ class OrderController extends Controller
             $totalPrice = $product->price + $tax;
 
             // Simpan data order dengan informasi game
-            ItemOrder::create([
+            $order = ItemOrder::create([
                 'username' => $request->username,
                 'wa_number' => $request->wa_number,
                 'email' => $request->email,
@@ -69,6 +70,13 @@ class OrderController extends Controller
                 'total_price' => $totalPrice,
                 'status' => 'pending',
             ]);
+
+            // Kirim notifikasi WhatsApp ke admin via Fonnte
+            try {
+                (new FonnteService())->notifyNewItemOrder($order);
+            } catch (\Exception $e) {
+                \Log::error('Fonnte notification failed: ' . $e->getMessage());
+            }
 
             return response()->json([
                 'success' => true,

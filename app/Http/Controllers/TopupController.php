@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TopupOrder;
+use App\Services\FonnteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -11,32 +12,32 @@ class TopupController extends Controller
 {
 
     public function track(Request $request)
-{
-    $q = trim((string) $request->query('order_id', ''));
+    {
+        $q = trim((string) $request->query('order_id', ''));
 
-    $order = null;
-    if ($q !== '') {
-        $order = TopupOrder::query()
-            ->where('order_id', $q)
-            ->first();
+        $order = null;
+        if ($q !== '') {
+            $order = TopupOrder::query()
+                ->where('order_id', $q)
+                ->first();
+        }
+
+        return view('front.robux.track', [
+            'query' => $q,
+            'order' => $order,
+        ]);
     }
-
-    return view('front.robux.track', [
-        'query'  => $q,
-        'order'  => $order,
-    ]);
-}
 
     public function store(Request $req)
     {
         $data = $req->validate([
-            'username'        => 'required|string|min:3|max:100',
-            'roblox_user_id'  => 'nullable|string',
-            'avatar_url'      => 'nullable|string',
-            'robux_amount'    => 'required|integer|min:50|max:5000',
-            'payment_method'  => 'required|string|exists:payment_methods,code',
-            'wa_number'       => 'required|string|min:10|max:20',
-            'payment_proof'   => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
+            'username' => 'required|string|min:3|max:100',
+            'roblox_user_id' => 'nullable|string',
+            'avatar_url' => 'nullable|string',
+            'robux_amount' => 'required|integer|min:50|max:5000',
+            'payment_method' => 'required|string|exists:payment_methods,code',
+            'wa_number' => 'required|string|min:10|max:20',
+            'payment_proof' => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
             // jika kamu masih mengirim teks bukti di meta, ini opsional:
             'payment_proof_text' => 'nullable|string|max:1000',
         ]);
@@ -48,9 +49,9 @@ class TopupController extends Controller
 
         // hitung harga server-side (anti manipulasi)
         $pricePer50 = \App\Models\RobuxSetting::getPricePer50();
-        $base  = (int) round(($data['robux_amount'] / 50) * $pricePer50);
-        $rate  = 0;
-        $tax   = 0;
+        $base = (int) round(($data['robux_amount'] / 50) * $pricePer50);
+        $rate = 0;
+        $tax = 0;
         $total = $base + $tax;
 
         // generate ORDER ID unik: RBX-YYMMDD-ABCDE
@@ -69,33 +70,40 @@ class TopupController extends Controller
 
         // simpan order
         $order = TopupOrder::create([
-            'order_id'       => $orderId,
-            'username'       => $data['username'],
+            'order_id' => $orderId,
+            'username' => $data['username'],
             'roblox_user_id' => $data['roblox_user_id'] ?? null,
-            'avatar_url'     => $data['avatar_url'] ?? null,
+            'avatar_url' => $data['avatar_url'] ?? null,
 
-            'robux_amount'   => $data['robux_amount'],
-            'base_price'     => $base,
-            'tax_rate'       => $rate,
-            'tax_amount'     => $tax,
-            'total_price'    => $total,
+            'robux_amount' => $data['robux_amount'],
+            'base_price' => $base,
+            'tax_rate' => $rate,
+            'tax_amount' => $tax,
+            'total_price' => $total,
 
             'payment_method' => $data['payment_method'],
-            'pay_to'         => $pm->type === 'qris' && $pm->qris_image ? Storage::url($pm->qris_image) : $pm->account_number,
-            'pay_to_type'    => $pm->type === 'qris' ? 'image' : 'text',
-            'wa_number'      => $data['wa_number'],
+            'pay_to' => $pm->type === 'qris' && $pm->qris_image ? Storage::url($pm->qris_image) : $pm->account_number,
+            'pay_to_type' => $pm->type === 'qris' ? 'image' : 'text',
+            'wa_number' => $data['wa_number'],
 
             'payment_proof_path' => $proofPath,
-            'status'         => TopupOrder::STAT_PENDING, // default
-            'meta'           => $meta,
+            'status' => TopupOrder::STAT_PENDING, // default
+            'meta' => $meta,
         ]);
+
+        // Kirim notifikasi WhatsApp ke admin via Fonnte
+        try {
+            (new FonnteService())->notifyNewTopupOrder($order);
+        } catch (\Exception $e) {
+            \Log::error('Fonnte notification failed: ' . $e->getMessage());
+        }
 
         // buat invoice PNG sederhana (GD)
         $invoiceUrl = $this->generateInvoicePng($order);
 
         // tampilkan halaman popup sukses (user klik "Lanjut" -> diarahkan ke '/')
         return response()->view('front.robux.order-success', [
-            'orderId'    => $order->order_id,
+            'orderId' => $order->order_id,
             'invoiceUrl' => $invoiceUrl,
             'redirectTo' => url(''), // halaman awal
         ]);
@@ -113,15 +121,16 @@ class TopupController extends Controller
 
         try {
             // kanvas
-            $w = 1100; $h = 700;
+            $w = 1100;
+            $h = 700;
             $im = imagecreatetruecolor($w, $h);
 
             // warna
-            $white   = imagecolorallocate($im, 255, 255, 255);
-            $black   = imagecolorallocate($im, 34, 36, 40);
-            $muted   = imagecolorallocate($im, 107, 114, 128);
+            $white = imagecolorallocate($im, 255, 255, 255);
+            $black = imagecolorallocate($im, 34, 36, 40);
+            $muted = imagecolorallocate($im, 107, 114, 128);
             $primary = imagecolorallocate($im, 241, 135, 171);
-            $line    = imagecolorallocate($im, 230, 232, 236);
+            $line = imagecolorallocate($im, 230, 232, 236);
 
             // background
             imagefilledrectangle($im, 0, 0, $w, $h, $white);
@@ -133,26 +142,45 @@ class TopupController extends Controller
 
             // konten
             $y = 130;
-            imagestring($im, 5, 40, $y, 'Tanggal', $muted); imagestring($im, 5, 240, $y, now()->format('d M Y H:i'), $black); $y+=40;
-            imagestring($im, 5, 40, $y, 'Username', $muted); imagestring($im, 5, 240, $y, (string) $o->username, $black); $y+=40;
-            imagestring($im, 5, 40, $y, 'Roblox ID', $muted); imagestring($im, 5, 240, $y, (string) ($o->roblox_user_id ?? '-'), $black); $y+=40;
-            imagestring($im, 5, 40, $y, 'WhatsApp', $muted); imagestring($im, 5, 240, $y, (string) $o->wa_number, $black); $y+=60;
+            imagestring($im, 5, 40, $y, 'Tanggal', $muted);
+            imagestring($im, 5, 240, $y, now()->format('d M Y H:i'), $black);
+            $y += 40;
+            imagestring($im, 5, 40, $y, 'Username', $muted);
+            imagestring($im, 5, 240, $y, (string) $o->username, $black);
+            $y += 40;
+            imagestring($im, 5, 40, $y, 'Roblox ID', $muted);
+            imagestring($im, 5, 240, $y, (string) ($o->roblox_user_id ?? '-'), $black);
+            $y += 40;
+            imagestring($im, 5, 40, $y, 'WhatsApp', $muted);
+            imagestring($im, 5, 240, $y, (string) $o->wa_number, $black);
+            $y += 60;
 
-            imageline($im, 40, $y, $w-40, $y, $line); $y+=30;
+            imageline($im, 40, $y, $w - 40, $y, $line);
+            $y += 30;
 
-            imagestring($im, 5, 40, $y,  'Metode',    $muted); imagestring($im, 5, 240, $y, strtoupper($o->payment_method), $black); $y+=40;
-            imagestring($im, 5, 40, $y,  'Robux',     $muted); imagestring($im, 5, 240, $y, number_format($o->robux_amount,0,',','.'), $black); $y+=40;
-            imagestring($im, 5, 40, $y,  'Harga',     $muted); imagestring($im, 5, 240, $y, 'Rp '.number_format($o->base_price,0,',','.'), $black); $y+=40;
-            imagestring($im, 5, 40, $y,  'Pajak',     $muted); imagestring($im, 5, 240, $y, number_format($o->tax_rate,2,',','.').'% (Rp '.number_format($o->tax_amount,0,',','.').')', $black); $y+=40;
-            imagestring($im, 5, 40, $y,  'Total',     $muted); imagestring($im, 5, 240, $y, 'Rp '.number_format($o->total_price,0,',','.'), $black); $y+=60;
+            imagestring($im, 5, 40, $y, 'Metode', $muted);
+            imagestring($im, 5, 240, $y, strtoupper($o->payment_method), $black);
+            $y += 40;
+            imagestring($im, 5, 40, $y, 'Robux', $muted);
+            imagestring($im, 5, 240, $y, number_format($o->robux_amount, 0, ',', '.'), $black);
+            $y += 40;
+            imagestring($im, 5, 40, $y, 'Harga', $muted);
+            imagestring($im, 5, 240, $y, 'Rp ' . number_format($o->base_price, 0, ',', '.'), $black);
+            $y += 40;
+            imagestring($im, 5, 40, $y, 'Pajak', $muted);
+            imagestring($im, 5, 240, $y, number_format($o->tax_rate, 2, ',', '.') . '% (Rp ' . number_format($o->tax_amount, 0, ',', '.') . ')', $black);
+            $y += 40;
+            imagestring($im, 5, 40, $y, 'Total', $muted);
+            imagestring($im, 5, 240, $y, 'Rp ' . number_format($o->total_price, 0, ',', '.'), $black);
+            $y += 60;
 
             // footer
-            imageline($im, 40, $h-90, $w-40, $h-90, $line);
-            imagestring($im, 3, 40, $h-70, 'Simpan invoice ini sebagai bukti transaksi.', $muted);
+            imageline($im, 40, $h - 90, $w - 40, $h - 90, $line);
+            imagestring($im, 3, 40, $h - 70, 'Simpan invoice ini sebagai bukti transaksi.', $muted);
 
             // simpan
             Storage::disk('public')->makeDirectory('invoices');
-            $rel = 'invoices/'.$o->order_id.'.png';
+            $rel = 'invoices/' . $o->order_id . '.png';
             $full = Storage::disk('public')->path($rel);
             imagepng($im, $full, 9);
             imagedestroy($im);
