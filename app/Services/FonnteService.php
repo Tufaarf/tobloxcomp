@@ -67,7 +67,7 @@ class FonnteService
             . "📧 Email: " . ($order->email ?? '-') . "\n"
             . "━━━━━━━━━━━━━━━\n"
             . "💵 Total: Rp " . number_format($order->total_price, 0, ',', '.') . "\n"
-            . "⏰ Waktu: " . now()->format('d M Y H:i') . "\n"
+            . "⏰ Waktu: " . now()->setTimezone('Asia/Jakarta')->format('d M Y H:i') . "\n"
             . "📌 Status: " . ucfirst($order->status);
 
         $this->sendMessage($this->adminPhone, $message);
@@ -88,7 +88,7 @@ class FonnteService
             . "💳 Pembayaran: " . strtoupper($order->payment_method) . "\n"
             . "📱 WhatsApp: {$order->wa_number}\n"
             . "━━━━━━━━━━━━━━━\n"
-            . "⏰ Waktu: " . now()->format('d M Y H:i') . "\n"
+            . "⏰ Waktu: " . now()->setTimezone('Asia/Jakarta')->format('d M Y H:i') . "\n"
             . "📌 Status: " . ucfirst($order->status);
 
         $this->sendMessage($this->adminPhone, $message);
@@ -111,7 +111,7 @@ class FonnteService
             . "📱 Phone: {$order->phone}\n"
             . "━━━━━━━━━━━━━━━\n"
             . "💵 Total: Rp " . number_format((float) $order->total_price, 0, ',', '.') . "\n"
-            . "⏰ Waktu: " . now()->format('d M Y H:i') . "\n"
+            . "⏰ Waktu: " . now()->setTimezone('Asia/Jakarta')->format('d M Y H:i') . "\n"
             . "📌 Status: " . ucfirst($order->status);
 
         $this->sendMessage($this->adminPhone, $message);
