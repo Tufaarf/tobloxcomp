@@ -347,7 +347,10 @@
 
             <!-- Account/Game Items Section -->
             <section class="container my-3">
-                <h2 class="section-title text-left mb-2">Akun Game & Items</h2>
+                <div class="container section-title" data-aos="fade-up">
+                    <h2 style="color: #f187ab">Akun</h2>
+                    <p style="color: #f187ab">Akun Game Roblox<br></p>
+                </div>
                 <div class="row">
                     <div class="col-md-3 mb-4">
                         <div class="sticky-top">
