@@ -1,935 +1,1212 @@
 @extends('front.master')
 @section('content')
-<style>
-/* ===== Header ===== */
+    <style>
+        /* ===== Header ===== */
 
-/* ===== GLightbox layout fix ===== */
-.glightbox-container .gslide-description,
-.glightbox-container .gdesc { position: static !important; width: auto !important; }
-.glightbox-container .ginner-container{ width: min(96vw, 1440px) !important; height: 90vh !important; }
-.glightbox-container .gslide{ display:flex !important; align-items:stretch; gap:0; }
-.glightbox-container .gslide-media{
-  flex:1 1 auto; height:90vh; aspect-ratio:4/3; max-width:calc(96vw - 420px);
-}
-.glightbox-container .gslide-media img,
-.glightbox-container .gslide-media video{ width:100%; height:100%; object-fit:cover; display:block; }
-.glightbox-container .gslide-description{
-  flex:0 0 420px; max-width:420px; background:#fff; border-left:1px solid rgba(0,0,0,.08);
-  display:flex; flex-direction:column; overflow:hidden;
-}
-.glightbox-container .gdesc-inner{ height:100%; overflow-y:auto; padding:18px 20px; }
-.glightbox-container .gdesc-inner h1,
-.glightbox-container .gdesc-inner h2,
-.glightbox-container .gdesc-inner h3{ margin:0 0 .5rem; }
-.glightbox-container .gdesc-inner ul,
-.glightbox-container .gdesc-inner ol{ padding-left:1.25rem; margin:.25rem 0 .75rem; }
-@media (max-width: 992px){
-  .glightbox-container .gslide{ display:block !important; }
-  .glightbox-container .gslide-media{ height:50vh; aspect-ratio:auto; max-width:100%; }
-  .glightbox-container .gslide-description{ max-width:100%; flex-basis:auto; }
-  .glightbox-container .gdesc-inner{ height:calc(40vh - 0px); }
-}
+        /* ===== GLightbox layout fix ===== */
+        .glightbox-container .gslide-description,
+        .glightbox-container .gdesc {
+            position: static !important;
+            width: auto !important;
+        }
 
-/* ===== Global spacings (lebih rapat antar section) ===== */
-body { padding-top: 72px; }
-.hero-wrap { margin-top: 18px; margin-bottom: 24px; }
+        .glightbox-container .ginner-container {
+            width: min(96vw, 1440px) !important;
+            height: 90vh !important;
+        }
 
-section.section,
-section[id] {                         /* kurangi jarak antar semua section */
-  padding: 36px 0;
-}
-@media (min-width: 992px){
-  section.section,
-  section[id]{ padding: 56px 0; }
-}
+        .glightbox-container .gslide {
+            display: flex !important;
+            align-items: stretch;
+            gap: 0;
+        }
 
-/* default jarak judul ke konten lebih rapat */
-.section-title { margin-bottom: 24px; }
+        .glightbox-container .gslide-media {
+            flex: 1 1 auto;
+            height: 90vh;
+            aspect-ratio: 4/3;
+            max-width: calc(96vw - 420px);
+        }
 
-/* khusus services: tambahkan jarak antara teks “Featured Services” dan kartu */
-.services .section-title { margin-bottom: 32px; }
+        .glightbox-container .gslide-media img,
+        .glightbox-container .gslide-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
-/* spacer utilitas (dipakai sekali di bawah): lebih kecil */
-.section-spacer { height: 24px; }
-@media (min-width: 992px){
-  .section-spacer { height: 32px; }
-}
+        .glightbox-container .gslide-description {
+            flex: 0 0 420px;
+            max-width: 420px;
+            background: #fff;
+            border-left: 1px solid rgba(0, 0, 0, .08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-/* ===== Hero controls ===== */
-.hero-wrap{
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 12px;
-  padding-right: 12px;
-}
-.hero-img{
-  width: 100%;
-  aspect-ratio: 24 / 10;
-  object-fit: cover;
-  display: block;
-}
-.hero-ctrl{ width:3.25rem; }
-.hero-ctrl-icon{
-  background-color: rgba(0,0,0,.65);
-  border-radius: 999px;
-  padding:14px;
-  background-size:45% 45%;
-}
-.carousel-control-prev{ left:-12px; }
-.carousel-control-next{ right:-12px; }
-@media (max-width: 768px){
-  body{ padding-top:64px; }
-  .hero-wrap{
-    max-width: 100%;
-  }
-  .carousel-control-prev{ left:-8px; }
-  .carousel-control-next{ right:-8px; }
-}
+        .glightbox-container .gdesc-inner {
+            height: 100%;
+            overflow-y: auto;
+            padding: 18px 20px;
+        }
 
-/* ===== Theme accents ===== */
-.light-background { background:#ffeef4; }
-.community .badge-app{
-  width:48px; height:48px; display:inline-flex; align-items:center; justify-content:center;
-  border-radius:999px; background:#fff; box-shadow:0 6px 20px rgba(0,0,0,.06); font-size:22px;
-}
-.community .btn-guide{ background:#f187ab; border:0; color:#fff; }
-.community .btn-guide:hover{ filter:brightness(0.95); }
+        .glightbox-container .gdesc-inner h1,
+        .glightbox-container .gdesc-inner h2,
+        .glightbox-container .gdesc-inner h3 {
+            margin: 0 0 .5rem;
+        }
 
-/* ===== FAQ ===== */
-.faq .accordion-button{
-  font-weight: 600;
-  color: #f187ab;
-  background: #fff5f8;
-}
-.faq .accordion-item{
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 14px;
-  border: 1px solid rgba(241, 135, 171, 0.2);  /* Lighter pink border */
-}
-.faq .accordion-button:not(.collapsed),
-.faq .accordion-button{
-  color: #f187ab;
-  background: #fff5f8;
-}
-.faq .accordion-button:focus {
-  border-color: rgba(241, 135, 171, 0.25);
-  box-shadow: 0 0 0 0.25rem rgba(241, 135, 171, 0.25);
-}
-.faq .accordion-button::after {
-  color: #f187ab;
-}
+        .glightbox-container .gdesc-inner ul,
+        .glightbox-container .gdesc-inner ol {
+            padding-left: 1.25rem;
+            margin: .25rem 0 .75rem;
+        }
 
-/* ===== Services cards ===== */
-.services .service-item{
-  border-radius:12px; background:#fff; box-shadow:0 8px 24px rgba(0,0,0,.06);
-}
-.services .service-item .icon{
-  width:56px; height:56px; border-radius:999px;
-  display:flex; align-items:center; justify-content:center;
-}
+        @media (max-width: 992px) {
+            .glightbox-container .gslide {
+                display: block !important;
+            }
 
-/* Jarak antar card (sudah pakai g-4, ini hanya memastikan konsisten) */
-.services .row{ --bs-gutter-x: 1.5rem; --bs-gutter-y: 1.5rem; }
+            .glightbox-container .gslide-media {
+                height: 50vh;
+                aspect-ratio: auto;
+                max-width: 100%;
+            }
 
-/* ===== Fix: jarak judul 'Featured Services' dengan kartu ===== */
-#services .section-title{            /* tambah jarak dari judul ke kartu */
-  margin-bottom: 56px;               /* sebelumnya 24–32px */
-}
-#services .cards-row{                /* kompensasi ikon yang menonjol keluar kartu */
-  padding-top: 28px;
-}
+            .glightbox-container .gslide-description {
+                max-width: 100%;
+                flex-basis: auto;
+            }
 
-/* Sesuaikan di mobile agar tetap proporsional */
-@media (max-width: 576px){
-  #services .section-title{ margin-bottom: 44px; }
-  #services .cards-row{ padding-top: 22px; }
-}
+            .glightbox-container .gdesc-inner {
+                height: calc(40vh - 0px);
+            }
+        }
 
-/* ===== Product cards ===== */
-.product-section {
-  background: #ffeef4;
-  padding: 50px 0;
-  overflow: hidden;
-}
-.product-section .section-title {
-  color: #f187ab;
-  margin-bottom: 40px;
-}
-.product-section .swiper {
-  padding: 10px 5px 30px;
-}
-.product-section .swiper-slide {
-  width: 280px;
-  margin-right: 25px;
-}
-.product-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease;
-  height: 100%;
-}
-.product-card:hover {
-  transform: translateY(-5px);
-}
-.product-card .card-img {
-  border-radius: 12px 12px 0 0;
-  height: 200px;
-  width: 100%;
-  object-fit: cover;
-}
-.product-card .card-body {
-  padding: 1.25rem;
-}
-.product-card .card-title {
-  color: #f187ab;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-.product-price {
-  color: #f187ab;
-  font-weight: bold;
-  font-size: 1.1rem;
-  margin-top: 0.5rem;
-}
+        /* ===== Global spacings (lebih rapat antar section) ===== */
+        body {
+            padding-top: 72px;
+        }
 
-/* ===== Game Categories ===== */
-.game-category-btn {
-  display: block;
-  text-decoration: none;
-  padding: 8px;  /* reduced from 12px */
-  border-radius: 12px; /* reduced from 16px */
-  background: #fff;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
+        .hero-wrap {
+            margin-top: 18px;
+            margin-bottom: 24px;
+        }
 
-.game-category-btn:hover {
-  transform: translateY(-2px);
-}
+        section.section,
+        section[id] {
+            /* kurangi jarak antar semua section */
+            padding: 36px 0;
+        }
 
-.game-category-btn.active {
-  background: #f187ab;
-}
+        @media (min-width: 992px) {
 
-.game-category-btn img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px; /* reduced from 12px */
-  margin-bottom: 6px; /* reduced from 8px */
-  aspect-ratio: 1/1;
-  object-fit: contain;
-  padding: 6px; /* reduced from 8px */
-  background: #fff;
-  transition: all 0.3s ease;
-}
+            section.section,
+            section[id] {
+                padding: 56px 0;
+            }
+        }
 
-.game-category-btn.active img {
-  background: rgba(255,255,255,0.9);
-}
+        /* default jarak judul ke konten lebih rapat */
+        .section-title {
+            margin-bottom: 24px;
+        }
 
-.game-category-btn .game-name {
-  color: #f187ab;
-  font-size: 0.75rem; /* reduced from 0.875rem */
-  font-weight: 600;
-  text-align: center;
-  transition: all 0.3s ease;
-}
+        /* khusus services: tambahkan jarak antara teks “Featured Services” dan kartu */
+        .services .section-title {
+            margin-bottom: 32px;
+        }
 
-.game-category-btn.active .game-name {
-  color: #fff;
-}
+        /* spacer utilitas (dipakai sekali di bawah): lebih kecil */
+        .section-spacer {
+            height: 24px;
+        }
 
-/* ===== Featured Services (custom cards like screenshot) ===== */
-#services .service-card {
-  border-radius:14px;
-  background: #fff5f8;
-  border: 1px solid rgba(241,135,171,0.12);
-  padding: 18px;
-  text-align: center;
-  min-height: 140px;
-  max-width: 320px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: transform .12s ease, box-shadow .12s ease;
-}
-#services .service-card .icon{
-  width:72px;
-  height:72px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:14px;
-  background:#fff;
-  box-shadow:0 6px 20px rgba(0,0,0,.06);
-  color:#f187ab;
-  font-size:28px;
-  line-height:72px;
-  flex: 0 0 auto;
-}
-#services .service-card h5{ margin:0; font-weight:700; color:#f187ab; font-size:1.05rem; }
-#services .service-card p{ margin:8px 0 0; color:#f187ab; opacity:.9; font-size:.9rem; }
-#services .service-card:hover{ transform: translateY(-6px); box-shadow:0 14px 36px rgba(0,0,0,.08); }
-#services .service-card.coming-soon{ background:#3f3a3a; color:#fff; border:0; }
-#services .service-card.coming-soon .icon{ background:transparent; color:rgba(255,255,255,.95); box-shadow:none; }
-#services .service-card.coming-soon h5, #services .service-card.coming-soon p{ color:#fff; }
+        @media (min-width: 992px) {
+            .section-spacer {
+                height: 32px;
+            }
+        }
 
-@media (max-width: 576px){
-  #services .service-card { min-height:120px; padding:14px; }
-  #services .service-card .icon{ width:56px; height:56px; line-height:56px; font-size:22px; margin-bottom:10px; }
-}
+        /* ===== Hero controls ===== */
+        .hero-wrap {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
 
-/* ===== Stats cards: center content ===== */
-#stats .stats-item {
-  justify-content: center; /* vertical centering */
-  text-align: center;     /* center text inside */
-}
-#stats .stats-item > div {
-  width: 100%;
-  text-align: center;
-}
-#stats .stats-item span {
-  display: block;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #f187ab;
-}
-#stats .stats-item p {
-  margin: 0;
-  color: #f187ab;
-  font-weight: 600;
-}
+        .hero-img {
+            width: 100%;
+            aspect-ratio: 24 / 10;
+            object-fit: cover;
+            display: block;
+        }
 
-.game-category-btn .all-games-icon {
-  width: 100%;
-  aspect-ratio: 1/1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  border-radius: 10px; /* reduced from 12px */
-  font-size: 1.25rem; /* reduced from 1.5rem */
-  color: #f187ab;
-  margin-bottom: 6px; /* reduced from 8px */
-  transition: all 0.3s ease;
-}
+        .hero-ctrl {
+            width: 3.25rem;
+        }
 
-.game-category-btn.active .all-games-icon {
-  background: rgba(255,255,255,0.9);
-}
-.game-category-carousel {
-  display: flex;
-  overflow-x: auto;
-  gap: 16px;
-  padding: 10px 0;
-}
+        .hero-ctrl-icon {
+            background-color: rgba(0, 0, 0, .65);
+            border-radius: 999px;
+            padding: 14px;
+            background-size: 45% 45%;
+        }
 
-.game-category-btn {
-  display: inline-block;
-  width: 120px;
-  text-decoration: none;
-  padding: 12px 8px;
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  text-align: center;
-  transition: all 0.3s ease;
-}
+        .carousel-control-prev {
+            left: -12px;
+        }
 
-.game-category-btn:hover {
-  transform: translateY(-2px);
-}
+        .carousel-control-next {
+            right: -12px;
+        }
 
-.game-category-btn img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 6px;
-  object-fit: contain;
-}
+        @media (max-width: 768px) {
+            body {
+                padding-top: 64px;
+            }
 
-.game-category-btn.active {
-  background: #f187ab;
-}
+            .hero-wrap {
+                max-width: 100%;
+            }
 
-.game-category-btn.active img {
-  background: rgba(255, 255, 255, 0.9);
-}
+            .carousel-control-prev {
+                left: -8px;
+            }
 
-.game-category-btn .game-name {
-  color: #f187ab;
-  font-size: 0.75rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
+            .carousel-control-next {
+                right: -8px;
+            }
+        }
 
-.game-category-btn.active .game-name {
-  color: #fff;
-}
+        /* ===== Theme accents ===== */
+        .light-background {
+            background: #ffeef4;
+        }
 
-/* Style the search input */
-.game-search {
-  margin: 20px 0;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #f187ab;
-  width: 100%;
-  max-width: 350px;
-  display: block;
-  margin-bottom: 20px;
-}
+        .community .badge-app {
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .06);
+            font-size: 22px;
+        }
 
-.game-category-swiper {
-  position: relative;
-  padding: 0 40px;
-}
+        .community .btn-guide {
+            background: #f187ab;
+            border: 0;
+            color: #fff;
+        }
 
-.game-category-swiper .swiper-button-next,
-.game-category-swiper .swiper-button-prev {
-  color: #f187ab;
-  width: 30px;
-  height: 30px;
-}
+        .community .btn-guide:hover {
+            filter: brightness(0.95);
+        }
 
-.game-category-swiper .swiper-button-next:after,
-.game-category-swiper .swiper-button-prev:after {
-  font-size: 20px;
-}
+        /* ===== FAQ ===== */
+        .faq .accordion-button {
+            font-weight: 600;
+            color: #f187ab;
+            background: #fff5f8;
+        }
 
-.game-category-swiper .game-category-btn {
-  margin: 0 8px;
-}
+        .faq .accordion-item {
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            border: 1px solid rgba(241, 135, 171, 0.2);
+            /* Lighter pink border */
+        }
 
-/* Add these CSS rules after existing game category styles */
-.game-category-desktop {
-  display: none;
-}
-.game-category-mobile {
-  display: block;
-}
-@media (min-width: 992px) {
-  .game-category-desktop {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    padding: 10px 0;
-  }
-  .game-category-mobile {
-    display: none;
-  }
-}
-</style>
+        .faq .accordion-button:not(.collapsed),
+        .faq .accordion-button {
+            color: #f187ab;
+            background: #fff5f8;
+        }
 
-<body class="index-page">
+        .faq .accordion-button:focus {
+            border-color: rgba(241, 135, 171, 0.25);
+            box-shadow: 0 0 0 0.25rem rgba(241, 135, 171, 0.25);
+        }
 
-  @include('front.header')
+        .faq .accordion-button::after {
+            color: #f187ab;
+        }
 
-  <main class="main">
+        /* ===== Services cards ===== */
+        .services .service-item {
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
+        }
 
-    <!-- Hero Section -->
-    <section class="hero-wrap container-xxl px-3" id="hero">
-      @if($herosections->count() > 0)
-      <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-        <div class="carousel-inner rounded-4 shadow-lg overflow-hidden">
-          @foreach($herosections as $i => $hero)
-            <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
-              <img src="{{ Storage::url($hero->image_url) }}" class="d-block w-100 hero-img" alt="Hero {{ $i+1 }}">
-            </div>
-          @endforeach
-        </div>
-        <button class="carousel-control-prev hero-ctrl" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon hero-ctrl-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Prev</span>
-        </button>
-        <button class="carousel-control-next hero-ctrl" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon hero-ctrl-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-      @endif
-    </section>
-    <!-- /Hero Section -->
+        .services .service-item .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    <!-- Services Section -->
-     <section id="services" class="services section">
-  <div class="container section-title" data-aos="fade-up">
-  <h2 style="color: #f187ab">Layanan</h2>
-  <p style="color: #f187ab">Pilih Layanan Yang Kamu Mau<br></p>
-  </div>
+        /* Jarak antar card (sudah pakai g-4, ini hanya memastikan konsisten) */
+        .services .row {
+            --bs-gutter-x: 1.5rem;
+            --bs-gutter-y: 1.5rem;
+        }
 
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-    <div class="row g-4 justify-content-center">
-      <div class="col-6 col-md-3">
-        <a href="{{ route('robux.services') }}" class="text-decoration-none">
-          <div class="service-card">
-            <div class="icon">
-              <i class="bi bi-currency-dollar"></i>
-            </div>
-            <h5>Beli Robux</h5>
-            <p class="small">Cepat &amp; Aman</p>
-          </div>
-        </a>
-      </div>
+        /* ===== Fix: jarak judul 'Featured Services' dengan kartu ===== */
+        #services .section-title {
+            /* tambah jarak dari judul ke kartu */
+            margin-bottom: 56px;
+            /* sebelumnya 24–32px */
+        }
 
-      <div class="col-6 col-md-3">
-        <a href="{{ route('front.items') }}" class="text-decoration-none">
-          <div class="service-card">
-            <div class="icon">
-              <i class="bi bi-gift"></i>
-            </div>
-            <h5>Item Roblox</h5>
-            <p class="small">Hadiah &amp; Pass</p>
-          </div>
-        </a>
-      </div>
+        #services .cards-row {
+            /* kompensasi ikon yang menonjol keluar kartu */
+            padding-top: 28px;
+        }
 
-      <div class="col-6 col-md-3">
-        <div class="service-card coming-soon">
-          <div class="icon">
-            <i class="bi bi-hourglass-split"></i>
-          </div>
-          <h5>Coming Soon!</h5>
-          <p class="small">Coming Soon</p>
-        </div>
-      </div>
-    </div>
-  </div>
- </section>
-    <!-- /Services Section -->
+        /* Sesuaikan di mobile agar tetap proporsional */
+        @media (max-width: 576px) {
+            #services .section-title {
+                margin-bottom: 44px;
+            }
 
-    <!-- Game Category Section -->
-    <section class="section light-background">
-      <div class="container section-title" data-aos="fade-up">
-        <p style="color: #f187ab">Cari Map Disini<br></p>
-      </div>
+            #services .cards-row {
+                padding-top: 22px;
+            }
+        }
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <!-- Search input -->
-        <input type="text" id="gameSearch" class="game-search" placeholder="Search for games..." onkeyup="searchGames()">
+        /* ===== Product cards ===== */
+        .product-section {
+            background: #ffeef4;
+            padding: 50px 0;
+            overflow: hidden;
+        }
 
-        <!-- Desktop Layout -->
-        <div class="game-category-desktop" id="gameCategoryDesktop">
-          @foreach($games as $game)
-            <div class="game-category-btn" data-game="{{ $game->id }}">
-              <img src="{{ Storage::url($game->icon) }}" alt="{{ $game->name }}">
-              <div class="game-name">{{ $game->name }}</div>
-            </div>
-          @endforeach
-          <div class="game-category-btn" data-game="all">
-            <div class="all-games-icon">
-              <i class="bi bi-grid"></i>
-            </div>
-            <div class="game-name">All Games</div>
-          </div>
-        </div>
+        .product-section .section-title {
+            color: #f187ab;
+            margin-bottom: 40px;
+        }
 
-        <!-- Mobile Carousel -->
-        <div class="game-category-mobile">
-          <div class="swiper game-category-swiper">
-            <div class="swiper-wrapper" id="gameCategory">
-              @foreach($games as $game)
-                <div class="swiper-slide" style="width: auto">
-                  <div class="game-category-btn" data-game="{{ $game->id }}">
-                    <img src="{{ Storage::url($game->icon) }}" alt="{{ $game->name }}">
-                    <div class="game-name">{{ $game->name }}</div>
-                  </div>
+        .product-section .swiper {
+            padding: 10px 5px 30px;
+        }
+
+        .product-section .swiper-slide {
+            width: 280px;
+            margin-right: 25px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card .card-img {
+            border-radius: 12px 12px 0 0;
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .product-card .card-body {
+            padding: 1.25rem;
+        }
+
+        .product-card .card-title {
+            color: #f187ab;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: #f187ab;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== Game Categories ===== */
+        .game-category-btn {
+            display: block;
+            text-decoration: none;
+            padding: 8px;
+            /* reduced from 12px */
+            border-radius: 12px;
+            /* reduced from 16px */
+            background: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .game-category-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .game-category-btn.active {
+            background: #f187ab;
+        }
+
+        .game-category-btn img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            /* reduced from 12px */
+            margin-bottom: 6px;
+            /* reduced from 8px */
+            aspect-ratio: 1/1;
+            object-fit: contain;
+            padding: 6px;
+            /* reduced from 8px */
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .game-category-btn.active img {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .game-category-btn .game-name {
+            color: #f187ab;
+            font-size: 0.75rem;
+            /* reduced from 0.875rem */
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .game-category-btn.active .game-name {
+            color: #fff;
+        }
+
+        /* ===== Featured Services (custom cards like screenshot) ===== */
+        .service-card {
+            border-radius: 14px;
+            background: #fff5f8;
+            border: 1px solid rgba(241, 135, 171, 0.12);
+            padding: 18px;
+            text-align: center;
+            min-height: 140px;
+            max-width: 320px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform .12s ease, box-shadow .12s ease;
+        }
+
+        .service-card .icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .06);
+            color: #f187ab;
+            font-size: 28px;
+            line-height: 72px;
+            flex: 0 0 auto;
+        }
+
+        .service-card h5 {
+            margin: 0;
+            font-weight: 700;
+            color: #f187ab;
+            font-size: 1.05rem;
+        }
+
+        .service-card p {
+            margin: 8px 0 0;
+            color: #f187ab;
+            opacity: .9;
+            font-size: .9rem;
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 36px rgba(0, 0, 0, .08);
+        }
+
+        .service-card.coming-soon {
+            background: #3f3a3a;
+            color: #fff;
+            border: 0;
+        }
+
+        .service-card.coming-soon .icon {
+            background: transparent;
+            color: rgba(255, 255, 255, .95);
+            box-shadow: none;
+        }
+
+        .service-card.coming-soon h5,
+        .service-card.coming-soon p {
+            color: #fff;
+        }
+
+        @media (max-width: 576px) {
+            .service-card {
+                min-height: 120px;
+                padding: 14px;
+            }
+
+            .service-card .icon {
+                width: 56px;
+                height: 56px;
+                line-height: 56px;
+                font-size: 22px;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* ===== Stats cards: center content ===== */
+        #stats .stats-item {
+            justify-content: center;
+            /* vertical centering */
+            text-align: center;
+            /* center text inside */
+        }
+
+        #stats .stats-item>div {
+            width: 100%;
+            text-align: center;
+        }
+
+        #stats .stats-item span {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f187ab;
+        }
+
+        #stats .stats-item p {
+            margin: 0;
+            color: #f187ab;
+            font-weight: 600;
+        }
+
+        .game-category-btn .all-games-icon {
+            width: 100%;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 10px;
+            /* reduced from 12px */
+            font-size: 1.25rem;
+            /* reduced from 1.5rem */
+            color: #f187ab;
+            margin-bottom: 6px;
+            /* reduced from 8px */
+            transition: all 0.3s ease;
+        }
+
+        .game-category-btn.active .all-games-icon {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .game-category-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 10px 0;
+        }
+
+        .game-category-btn {
+            display: inline-block;
+            width: 120px;
+            text-decoration: none;
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .game-category-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .game-category-btn img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            object-fit: contain;
+        }
+
+        .game-category-btn.active {
+            background: #f187ab;
+        }
+
+        .game-category-btn.active img {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .game-category-btn .game-name {
+            color: #f187ab;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .game-category-btn.active .game-name {
+            color: #fff;
+        }
+
+        /* Style the search input */
+        .game-search {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #f187ab;
+            width: 100%;
+            max-width: 350px;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .game-category-swiper {
+            position: relative;
+            padding: 0 40px;
+        }
+
+        .game-category-swiper .swiper-button-next,
+        .game-category-swiper .swiper-button-prev {
+            color: #f187ab;
+            width: 30px;
+            height: 30px;
+        }
+
+        .game-category-swiper .swiper-button-next:after,
+        .game-category-swiper .swiper-button-prev:after {
+            font-size: 20px;
+        }
+
+        .game-category-swiper .game-category-btn {
+            margin: 0 8px;
+        }
+
+        /* Add these CSS rules after existing game category styles */
+        .game-category-desktop {
+            display: none;
+        }
+
+        .game-category-mobile {
+            display: block;
+        }
+
+        @media (min-width: 992px) {
+            .game-category-desktop {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+                padding: 10px 0;
+            }
+
+            .game-category-mobile {
+                display: none;
+            }
+        }
+    </style>
+
+    <body class="index-page">
+
+        @include('front.header')
+
+        <main class="main">
+
+            <!-- Hero Section -->
+            <section class="hero-wrap container-xxl px-3" id="hero">
+                @if ($herosections->count() > 0)
+                    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                        <div class="carousel-inner rounded-4 shadow-lg overflow-hidden">
+                            @foreach ($herosections as $i => $hero)
+                                <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
+                                    <img src="{{ Storage::url($hero->image_url) }}" class="d-block w-100 hero-img"
+                                        alt="Hero {{ $i + 1 }}">
+                                </div>
+                            @endforeach
+                        </div>
+                        <button class="carousel-control-prev hero-ctrl" type="button" data-bs-target="#heroCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon hero-ctrl-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Prev</span>
+                        </button>
+                        <button class="carousel-control-next hero-ctrl" type="button" data-bs-target="#heroCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon hero-ctrl-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                @endif
+            </section>
+            <!-- /Hero Section -->
+
+            <!-- Services Section -->
+            <section id="services" class="services section">
+                <div class="container section-title" data-aos="fade-up">
+                    <h2 style="color: #f187ab">Layanan</h2>
+                    <p style="color: #f187ab">Pilih Layanan Yang Kamu Mau<br></p>
                 </div>
-              @endforeach
-              <div class="swiper-slide" style="width: auto">
-                <div class="game-category-btn" data-game="all">
-                  <div class="all-games-icon">
-                    <i class="bi bi-grid"></i>
-                  </div>
-                  <div class="game-name">All Games</div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /Game Category Section -->
 
-    <!-- Game Items Section -->
-    <section class="section pb-5">
-      <div class="container">
-        <div class="row g-4" id="itemList" data-aos="fade-up">
-          @foreach($items->take(100) as $item)
-            <div class="col-6 col-md-3 item-card" data-game="{{ $item->game ? $item->game->id : '' }}">
-              <a href="{{ route('front.product.detail', $item->id) }}" class="text-decoration-none">
-                <div class="card product-card h-100">
-                  <img src="{{ Storage::url($item->banner) }}" class="card-img-top" alt="{{ $item->name }}" style="height:140px;object-fit:cover;">
-                  <div class="card-body p-3">
-                    <h5 class="card-title h6 mb-1">{{ $item->name }}</h5>
-                    <p class="card-text small mb-2">{{ $item->description }}</p>
-                    <div class="product-price">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
-                    <div class="mt-1 text-muted small">Game: {{ $item->game ? $item->game->name : '-' }}</div>
-                  </div>
-                </div>
-              </a>
-            </div>
-          @endforeach
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-6 col-md-3">
+                            <a href="{{ route('robux.services') }}" class="text-decoration-none">
+                                <div class="service-card">
+                                    <div class="icon">
+                                        <i class="bi bi-currency-dollar"></i>
+                                    </div>
+                                    <h5>Beli Robux</h5>
+                                    <p class="small">Cepat &amp; Aman</p>
+                                </div>
+                            </a>
+                        </div>
 
-        </div>
-      </div>
-    </section>
-    <!-- /Game Items Section -->
+                        <div class="col-6 col-md-3">
+                            <a href="{{ route('front.items') }}" class="text-decoration-none">
+                                <div class="service-card">
+                                    <div class="icon">
+                                        <i class="bi bi-gift"></i>
+                                    </div>
+                                    <h5>Item Roblox</h5>
+                                    <p class="small">Hadiah &amp; Pass</p>
+                                </div>
+                            </a>
+                        </div>
 
-    <!-- About Section -->
-    <section id="about" class="about section">
-      <div class="container">
-        <div class="row gy-4">
-          @foreach ($abouts as $about)
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-              <h3>{{$about->headline}}</h3>
-              <img src="{{Storage::url($about->image)}}" class="img-fluid rounded-4 mb-4" alt="">
-              <p>{!! $about->description !!}</p>
-            </div>
-
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
-              <div class="content ps-0 ps-lg-5">
-                <p>{!! $about->sub_description !!}</p>
-                <div class="position-relative mt-4">
-                  <img src="{{Storage::url($about->second_image)}}" class="img-fluid rounded-4" alt="">
-                </div>
-              </div>
-            </div>
-        </div>
-          @endforeach
-      </div>
-    </section>
-    <!-- /About Section -->
-
-    <!-- Stats Section -->
-   <section id="stats" class="stats section light-background">
-    <div class="container section-title" data-aos="fade-up">
-        <h2 style="color: #f187ab">Stats</h2>
-        <p style="color: #f187ab">Toblox ID stats<br></p>
-    </div>
-
-    <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row gy-4">
-            @forelse ($companyStats as $stat)
-                <div class="col-lg-3 col-md-6 col-10 mx-auto">
-                <div class="stats-item d-flex align-items-center w-100 h-100">
-                        <div>
-                            <span style="color: #f187ab">{{$stat->goals}}</span>
-                            <p style="color: #f187ab; font-weight: bold;">{{$stat->title}}</p>
+                        <div class="col-6 col-md-3">
+                            <div class="service-card coming-soon">
+                                <div class="icon">
+                                    <i class="bi bi-hourglass-split"></i>
+                                </div>
+                                <h5>Coming Soon!</h5>
+                                <p class="small">Coming Soon</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            @empty
-                <p>Data Kosong</p>
-            @endforelse
-        </div>
-    </div>
-</section>
-    <!-- /Stats Section -->
+            </section>
+            <!-- /Services Section -->
 
-    <div class="section-spacer"></div>
-
-    <!-- Community Section -->
-    <section id="community" class="community section light-background">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row align-items-center g-4">
-          <div class="col-lg-6 text-center">
-            <img src="{{ asset('assets/img/mascot/maskot.png') }}" alt="Community" class="img-fluid rounded-4 shadow-sm">
-          </div>
-          <div class="col-lg-6">
-            <h2 class="fw-bold mb-3" style="color: #f187ab">{{ $community->header ?? 'Mengalami kesulitan saat membeli Robux?' }}</h2>
-            <div class="mb-4" style="color: #f187ab">{!! $community->description ?? '...' !!}</div>
-
-            <div class="d-flex align-items-center gap-3 mb-4">
-              @if(!empty($community?->link_whatsapp))
-                <a href="{{ $community->link_whatsapp }}" class="badge-app" target="_blank" rel="noopener">
-                  <i class="bi bi-whatsapp"></i>
-                </a>
-              @endif
-              @if(!empty($community?->link_instagram))
-                <a href="{{ $community->link_instagram }}" class="badge-app" target="_blank" rel="noopener">
-                  <i class="bi bi-instagram"></i>
-                </a>
-              @endif
-              @if(!empty($community?->link_discord))
-                <a href="{{ $community->link_discord }}" class="badge-app" target="_blank" rel="noopener">
-                  <i class="bi bi-discord"></i>
-                </a>
-              @endif
-            </div>
-            {{-- <a href="#" class="btn btn-guide px-4 py-2 rounded-3">Panduan</a> --}}
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /Community Section -->
-
-    <!-- FAQ Section -->
-    <section id="faq" class="faq section">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="section-title text-center">
-          <p style="color: #f187ab">Frequently Ask Question (FAQ)</p>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-10 mx-auto">
-            <div class="accordion accordion-flush" id="faqAccordion">
-              @forelse ($faqs as $idx => $faq)
-                @php $collapseId = "faq" . ($idx+1); @endphp
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="heading-{{ $collapseId }}">
-                    <button class="accordion-button collapsed" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#{{ $collapseId }}"
-                            aria-expanded="false" aria-controls="{{ $collapseId }}">
-                      {{ $faq->question }}
-                    </button>
-                  </h2>
-                  <div id="{{ $collapseId }}" class="accordion-collapse collapse"
-                       aria-labelledby="heading-{{ $collapseId }}" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                      {!! $faq->answer !!}
-                    </div>
-                  </div>
+            <!-- Game Category Section -->
+            <section class="section light-background">
+                <div class="container section-title" data-aos="fade-up">
+                    <p style="color: #f187ab">Cari Map Disini<br></p>
                 </div>
-              @empty
-                <p class="text-center text-muted">Belum ada FAQ.</p>
-              @endforelse
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /FAQ Section -->
 
-    <!-- Testimonials Section -->
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Search input -->
+                    <input type="text" id="gameSearch" class="game-search" placeholder="Search for games..."
+                        onkeyup="searchGames()">
 
-    <!-- /Testimonials Section -->
+                    <!-- Desktop Layout -->
+                    <div class="game-category-desktop" id="gameCategoryDesktop">
+                        @foreach ($games as $game)
+                            <div class="game-category-btn" data-game="{{ $game->id }}">
+                                <img src="{{ Storage::url($game->icon) }}" alt="{{ $game->name }}">
+                                <div class="game-name">{{ $game->name }}</div>
+                            </div>
+                        @endforeach
+                        <div class="game-category-btn" data-game="all">
+                            <div class="all-games-icon">
+                                <i class="bi bi-grid"></i>
+                            </div>
+                            <div class="game-name">All Games</div>
+                        </div>
+                    </div>
 
-  </main>
+                    <!-- Mobile Carousel -->
+                    <div class="game-category-mobile">
+                        <div class="swiper game-category-swiper">
+                            <div class="swiper-wrapper" id="gameCategory">
+                                @foreach ($games as $game)
+                                    <div class="swiper-slide" style="width: auto">
+                                        <div class="game-category-btn" data-game="{{ $game->id }}">
+                                            <img src="{{ Storage::url($game->icon) }}" alt="{{ $game->name }}">
+                                            <div class="game-name">{{ $game->name }}</div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                <div class="swiper-slide" style="width: auto">
+                                    <div class="game-category-btn" data-game="all">
+                                        <div class="all-games-icon">
+                                            <i class="bi bi-grid"></i>
+                                        </div>
+                                        <div class="game-name">All Games</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /Game Category Section -->
 
-  @include('front.footer')
-  <!-- Scroll Top -->
-  <a href="https://wa.me/6281234567890" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-whatsapp"></i></a>
+            <!-- Game Items Section -->
+            <section class="section pb-5">
+                
+                <div class="container">
+                    <div class="row g-4" id="itemList" data-aos="fade-up">
+                        @foreach ($items->take(100) as $item)
+                            <div class="col-6 col-md-3 item-card" data-game="{{ $item->game ? $item->game->id : '' }}">
+                                <a href="{{ route('front.product.detail', $item->id) }}" class="text-decoration-none">
+                                    <div class="card product-card h-100">
+                                        <img src="{{ Storage::url($item->banner) }}" class="card-img-top"
+                                            alt="{{ $item->name }}" style="height:140px;object-fit:cover;">
+                                        <div class="card-body p-3">
+                                            <h5 class="card-title h6 mb-1">{{ $item->name }}</h5>
+                                            <p class="card-text small mb-2">{{ $item->description }}</p>
+                                            <div class="product-price">Rp {{ number_format($item->price, 0, ',', '.') }}
+                                            </div>
+                                            <div class="mt-1 text-muted small">Game:
+                                                {{ $item->game ? $item->game->name : '-' }}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
 
-  <!-- Preloader -->
-  <div id="preloader"></div>
+                    </div>
+                </div>
+            </section>
+            <!-- /Game Items Section -->
 
-  <!-- Vendor JS Files -->
-  <script src="{{asset('assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('assets/php-email-form/validate.js')}}"></script>
-  <script src="{{asset('assets/aos/aos.js')}}"></script>
-  <script src="{{asset('assets/glightbox/js/glightbox.min.js')}}"></script>
-  <script src="{{asset('assets/purecounter/purecounter_vanilla.js')}}"></script>
-  <script src="{{asset('assets/swiper/swiper-bundle.min.js')}}"></script>
-  <script src="{{asset('assets/imagesloaded/imagesloaded.pkgd.min.js')}}"></script>
-  <script src="{{asset('assets/isotope-layout/isotope.pkgd.min.js')}}"></script>
 
-  <!-- Main JS File -->
-  <script src="{{asset('js/main.js')}}"></script>
+            {{-- GANME ACCOUNT SECTION (ON REWORK) --}}
+            <section class="section pb-5">
+                <div class="container section-title" data-aos="fade-up">
+                    <h2 style="color: #f187ab">Akun</h2>
+                    <p style="color: #f187ab">Beli Akun Roblox<br></p>
+                </div>
+                <div class="container">
+                    <div class="row g-4" id="itemList" data-aos="fade-up">
+                        @foreach ( $accountproduct->take(7) as $item)
+                                    @php
+                                        $images = $item->images;
+                                        if (is_string($images))
+                                            $images = json_decode($images, true);
+                                        $firstImage = (is_array($images) && count($images) > 0) ? $images[0] : null;
+                                        $imageUrl = $firstImage ? Storage::url($firstImage) : asset('assets/img/placeholder.jpg');
+                                    @endphp          
+                            <div class="col-6 col-md-3 item-card" data-game="{{ $item->game ? $item->game->id : '' }}">
+                                        <a href="{{ route('account.show', $item->id) }}" class="text-decoration-none">
+                                            <div class="card product-card h-100">
+                                                <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $item->name }}"
+                                                    style="height:140px;object-fit:cover;">
+                                                <div class="card-body p-3">
+                                                    <h5 class="card-title h6 mb-1 text-truncate" title="{{ $item->name }}">
+                                                        {{ $item->name }}</h5>
+                                                    <p class="card-text small mb-2 text-muted"
+                                                        style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                        {{ strip_tags($item->description) }}</p>
+                                                    <div class="product-price">Rp {{ number_format($item->price, 0, ',', '.') }}
+                                                    </div>
+                                                    <div class="mt-1 text-muted small">Game:
+                                                        {{ $item->game ? $item->game->name : '-' }}</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                        @endforeach
+                        
+                        <div class="col-6 col-md-3 item-card">
+                            <a href="{{ route('account.index') }}" class="text-decoration-none">
+                                <div class="service-card h-100" style="max-width: none; flex: 1;">
+                                    <div class="icon">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </div>
+                                    <h5>Semua Akun</h5>
+                                    <p class="small">Lihat Selengkapnya</p>
+                                </div>
+                            </a>
+                        </div>
+                    
+                    </div>
+                </div>
+            </section>
+            <!-- About Section -->
+            <section id="about" class="about section">
+                <div class="container">
+                    <div class="row gy-4">
+                        @foreach ($abouts as $about)
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                                <h3>{{ $about->headline }}</h3>
+                                <img src="{{ Storage::url($about->image) }}" class="img-fluid rounded-4 mb-4"
+                                    alt="">
+                                <p>{!! $about->description !!}</p>
+                            </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      GLightbox({
-        selector: '.portfolio .glightbox',
-        descPosition: 'right',
-        width: '96vw',
-        height: '90vh',
-        loop: true,
-      });
+                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
+                                <div class="content ps-0 ps-lg-5">
+                                    <p>{!! $about->sub_description !!}</p>
+                                    <div class="position-relative mt-4">
+                                        <img src="{{ Storage::url($about->second_image) }}" class="img-fluid rounded-4"
+                                            alt="">
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    @endforeach
+                </div>
+            </section>
+            <!-- /About Section -->
 
-      // Initialize product swiper
-      new Swiper('.product-swiper', {
-        slidesPerView: 'auto',
-        spaceBetween: 25,
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
-        breakpoints: {
-          320: {
-            slidesPerView: 1,
-            spaceBetween: 20
-          },
-          640: {
-            slidesPerView: 2,
-            spaceBetween: 20
-          },
-          768: {
-            slidesPerView: 3,
-            spaceBetween: 25
-          },
-          1024: {
-            slidesPerView: 4,
-            spaceBetween: 25
-          }
-        }
-      });
+            <!-- Stats Section -->
+            <section id="stats" class="stats section light-background">
+                <div class="container section-title" data-aos="fade-up">
+                    <h2 style="color: #f187ab">Stats</h2>
+                    <p style="color: #f187ab">Toblox ID stats<br></p>
+                </div>
 
-      // Initialize game category swiper
-      new Swiper('.game-category-swiper', {
-        slidesPerView: 'auto',
-        spaceBetween: 10,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-          320: {
-            slidesPerView: 2,
-          },
-          576: {
-            slidesPerView: 3,
-          },
-          768: {
-            slidesPerView: 4,
-          }
-        }
-      });
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row gy-4">
+                        @forelse ($companyStats as $stat)
+                            <div class="col-lg-3 col-md-6 col-10 mx-auto">
+                                <div class="stats-item d-flex align-items-center w-100 h-100">
+                                    <div>
+                                        <span style="color: #f187ab">{{ $stat->goals }}</span>
+                                        <p style="color: #f187ab; font-weight: bold;">{{ $stat->title }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <p>Data Kosong</p>
+                        @endforelse
+                    </div>
+                </div>
+            </section>
+            <!-- /Stats Section -->
 
-      // Game category filter
-      document.querySelectorAll('.game-category-btn').forEach(function(btn){
-        btn.addEventListener('click', function(){
-          var selected = this.getAttribute('data-game');
-          // Remove active class from all buttons
-          document.querySelectorAll('.game-category-btn').forEach(function(b){
-            b.classList.remove('active');
-          });
-          // Add active class to clicked button
-          this.classList.add('active');
-          // Filter items
-          document.querySelectorAll('.item-card').forEach(function(card){
-            if(selected === 'all' || card.getAttribute('data-game') === selected){
-              card.style.display = '';
-            }else{
-              card.style.display = 'none';
+            <div class="section-spacer"></div>
+
+            <!-- Community Section -->
+            <section id="community" class="community section light-background">
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row align-items-center g-4">
+                        <div class="col-lg-6 text-center">
+                            <img src="{{ asset('assets/img/mascot/maskot.png') }}" alt="Community"
+                                class="img-fluid rounded-4 shadow-sm">
+                        </div>
+                        <div class="col-lg-6">
+                            <h2 class="fw-bold mb-3" style="color: #f187ab">
+                                {{ $community->header ?? 'Mengalami kesulitan saat membeli Robux?' }}</h2>
+                            <div class="mb-4" style="color: #f187ab">{!! $community->description ?? '...' !!}</div>
+
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                @if (!empty($community?->link_whatsapp))
+                                    <a href="{{ $community->link_whatsapp }}" class="badge-app" target="_blank"
+                                        rel="noopener">
+                                        <i class="bi bi-whatsapp"></i>
+                                    </a>
+                                @endif
+                                @if (!empty($community?->link_instagram))
+                                    <a href="{{ $community->link_instagram }}" class="badge-app" target="_blank"
+                                        rel="noopener">
+                                        <i class="bi bi-instagram"></i>
+                                    </a>
+                                @endif
+                                @if (!empty($community?->link_discord))
+                                    <a href="{{ $community->link_discord }}" class="badge-app" target="_blank"
+                                        rel="noopener">
+                                        <i class="bi bi-discord"></i>
+                                    </a>
+                                @endif
+                            </div>
+                            {{-- <a href="#" class="btn btn-guide px-4 py-2 rounded-3">Panduan</a> --}}
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /Community Section -->
+
+            <!-- FAQ Section -->
+            <section id="faq" class="faq section">
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                    <div class="section-title text-center">
+                        <p style="color: #f187ab">Frequently Ask Question (FAQ)</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-10 mx-auto">
+                            <div class="accordion accordion-flush" id="faqAccordion">
+                                @forelse ($faqs as $idx => $faq)
+                                    @php $collapseId = "faq" . ($idx+1); @endphp
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading-{{ $collapseId }}">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#{{ $collapseId }}"
+                                                aria-expanded="false" aria-controls="{{ $collapseId }}">
+                                                {{ $faq->question }}
+                                            </button>
+                                        </h2>
+                                        <div id="{{ $collapseId }}" class="accordion-collapse collapse"
+                                            aria-labelledby="heading-{{ $collapseId }}" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body">
+                                                {!! $faq->answer !!}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <p class="text-center text-muted">Belum ada FAQ.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /FAQ Section -->
+
+            <!-- Testimonials Section -->
+
+            <!-- /Testimonials Section -->
+
+        </main>
+
+        @include('front.footer')
+        <!-- Scroll Top -->
+        <a href="https://wa.me/6281234567890" class="scroll-top d-flex align-items-center justify-content-center"><i
+                class="bi bi-whatsapp"></i></a>
+
+        <!-- Preloader -->
+        <div id="preloader"></div>
+
+        <!-- Vendor JS Files -->
+        <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('assets/php-email-form/validate.js') }}"></script>
+        <script src="{{ asset('assets/aos/aos.js') }}"></script>
+        <script src="{{ asset('assets/glightbox/js/glightbox.min.js') }}"></script>
+        <script src="{{ asset('assets/purecounter/purecounter_vanilla.js') }}"></script>
+        <script src="{{ asset('assets/swiper/swiper-bundle.min.js') }}"></script>
+        <script src="{{ asset('assets/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
+        <script src="{{ asset('assets/isotope-layout/isotope.pkgd.min.js') }}"></script>
+
+        <!-- Main JS File -->
+        <script src="{{ asset('js/main.js') }}"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                GLightbox({
+                    selector: '.portfolio .glightbox',
+                    descPosition: 'right',
+                    width: '96vw',
+                    height: '90vh',
+                    loop: true,
+                });
+
+                // Initialize product swiper
+                new Swiper('.product-swiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 25,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1,
+                            spaceBetween: 20
+                        },
+                        640: {
+                            slidesPerView: 2,
+                            spaceBetween: 20
+                        },
+                        768: {
+                            slidesPerView: 3,
+                            spaceBetween: 25
+                        },
+                        1024: {
+                            slidesPerView: 4,
+                            spaceBetween: 25
+                        }
+                    }
+                });
+
+                // Initialize game category swiper
+                new Swiper('.game-category-swiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 2,
+                        },
+                        576: {
+                            slidesPerView: 3,
+                        },
+                        768: {
+                            slidesPerView: 4,
+                        }
+                    }
+                });
+
+                // Game category filter
+                document.querySelectorAll('.game-category-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var selected = this.getAttribute('data-game');
+                        // Remove active class from all buttons
+                        document.querySelectorAll('.game-category-btn').forEach(function(b) {
+                            b.classList.remove('active');
+                        });
+                        // Add active class to clicked button
+                        this.classList.add('active');
+                        // Filter items
+                        document.querySelectorAll('.item-card').forEach(function(card) {
+                            if (selected === 'all' || card.getAttribute('data-game') ===
+                                selected) {
+                                card.style.display = '';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                GLightbox({
+                    selector: '.portfolio .glightbox',
+                    descPosition: 'right',
+                    width: '96vw',
+                    height: '90vh',
+                    loop: true,
+                });
+
+                // Initialize product swiper
+                new Swiper('.product-swiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 25,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1,
+                            spaceBetween: 20
+                        },
+                        640: {
+                            slidesPerView: 2,
+                            spaceBetween: 20
+                        },
+                        768: {
+                            slidesPerView: 3,
+                            spaceBetween: 25
+                        },
+                        1024: {
+                            slidesPerView: 4,
+                            spaceBetween: 25
+                        }
+                    }
+                });
+
+                // Initialize game category swiper
+                new Swiper('.game-category-swiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 2,
+                        },
+                        576: {
+                            slidesPerView: 3,
+                        },
+                        768: {
+                            slidesPerView: 4,
+                        }
+                    }
+                });
+
+                // Game category filter
+                document.querySelectorAll('.game-category-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var selected = this.getAttribute('data-game');
+                        // Remove active class from all buttons
+                        document.querySelectorAll('.game-category-btn').forEach(function(b) {
+                            b.classList.remove('active');
+                        });
+                        // Add active class to clicked button
+                        this.classList.add('active');
+                        // Filter items
+                        document.querySelectorAll('.item-card').forEach(function(card) {
+                            if (selected === 'all' || card.getAttribute('data-game') ===
+                                selected) {
+                                card.style.display = '';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+            });
+
+            function searchGames() {
+                var input = document.getElementById('gameSearch');
+                var filter = input.value.toUpperCase();
+
+                // Search in desktop layout
+                var desktopBtns = document.getElementById("gameCategoryDesktop").getElementsByClassName('game-category-btn');
+                searchInElements(desktopBtns, filter);
+
+                // Search in mobile layout
+                var mobileBtns = document.getElementById("gameCategory").getElementsByClassName('game-category-btn');
+                searchInElements(mobileBtns, filter);
             }
-          });
-        });
-      });
-    });
-  </script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      GLightbox({
-        selector: '.portfolio .glightbox',
-        descPosition: 'right',
-        width: '96vw',
-        height: '90vh',
-        loop: true,
-      });
-
-      // Initialize product swiper
-      new Swiper('.product-swiper', {
-        slidesPerView: 'auto',
-        spaceBetween: 25,
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
-        breakpoints: {
-          320: {
-            slidesPerView: 1,
-            spaceBetween: 20
-          },
-          640: {
-            slidesPerView: 2,
-            spaceBetween: 20
-          },
-          768: {
-            slidesPerView: 3,
-            spaceBetween: 25
-          },
-          1024: {
-            slidesPerView: 4,
-            spaceBetween: 25
-          }
-        }
-      });
-
-      // Initialize game category swiper
-      new Swiper('.game-category-swiper', {
-        slidesPerView: 'auto',
-        spaceBetween: 10,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-          320: {
-            slidesPerView: 2,
-          },
-          576: {
-            slidesPerView: 3,
-          },
-          768: {
-            slidesPerView: 4,
-          }
-        }
-      });
-
-      // Game category filter
-      document.querySelectorAll('.game-category-btn').forEach(function(btn){
-        btn.addEventListener('click', function(){
-          var selected = this.getAttribute('data-game');
-          // Remove active class from all buttons
-          document.querySelectorAll('.game-category-btn').forEach(function(b){
-            b.classList.remove('active');
-          });
-          // Add active class to clicked button
-          this.classList.add('active');
-          // Filter items
-          document.querySelectorAll('.item-card').forEach(function(card){
-            if(selected === 'all' || card.getAttribute('data-game') === selected){
-              card.style.display = '';
-            }else{
-              card.style.display = 'none';
+            function searchInElements(elements, filter) {
+                for (var i = 0; i < elements.length; i++) {
+                    var gameName = elements[i].getElementsByClassName("game-name")[0];
+                    var txtValue = gameName.textContent || gameName.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        elements[i].style.display = "";
+                    } else {
+                        elements[i].style.display = "none";
+                    }
+                }
             }
-          });
-        });
-      });
-    });
+        </script>
 
-    function searchGames() {
-      var input = document.getElementById('gameSearch');
-      var filter = input.value.toUpperCase();
-
-      // Search in desktop layout
-      var desktopBtns = document.getElementById("gameCategoryDesktop").getElementsByClassName('game-category-btn');
-      searchInElements(desktopBtns, filter);
-
-      // Search in mobile layout
-      var mobileBtns = document.getElementById("gameCategory").getElementsByClassName('game-category-btn');
-      searchInElements(mobileBtns, filter);
-    }
-
-    function searchInElements(elements, filter) {
-      for (var i = 0; i < elements.length; i++) {
-        var gameName = elements[i].getElementsByClassName("game-name")[0];
-        var txtValue = gameName.textContent || gameName.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          elements[i].style.display = "";
-        } else {
-          elements[i].style.display = "none";
-        }
-      }
-    }
-  </script>
-
-</body>
+    </body>
 @endsection
