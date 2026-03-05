@@ -466,7 +466,7 @@
     <script src="{{asset('assets/imagesloaded/imagesloaded.pkgd.min.js')}}"></script>
     <script src="{{asset('assets/isotope-layout/isotope.pkgd.min.js')}}"></script>
 
-    <script src="{{asset('js/main.js')}}"></script>
+    <script src="{{asset('js/main.js')}}?v={{ time() }}"></script>
 
 
 
