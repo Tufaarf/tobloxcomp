@@ -32,7 +32,7 @@
         }
 
         .product-detail {
-            padding: 40px 0;
+            padding: 100px 0 40px 0;
             background: #fff;
         }
 
@@ -65,11 +65,12 @@
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 450px;
+            max-width: 380px;
             aspect-ratio: 4 / 5;
             margin: 0 auto;
             background: #fff;
             position: relative;
+            cursor: zoom-in;
         }
 
         .product-image img {
@@ -278,7 +279,9 @@
 
                 <div class="product-image-container">
                     <div class="product-image" id="image-container">
-                        <img id="main-display-image" class="active" src="{{ $firstImage }}" alt="{{ $item->name }}">
+                        <a id="main-glightbox" href="{{ $firstImage }}" class="glightbox">
+                            <img id="main-display-image" class="active" src="{{ $firstImage }}" alt="{{ $item->name }}">
+                        </a>
                     </div>
                     <!-- Gallery Thumbs -->
                     @if(count($imageList) > 1)
@@ -437,6 +440,10 @@
                 currentImg.remove();
                 isAnimating = false;
             }, 450);
+
+            // Update Lightbox href
+            document.getElementById('main-glightbox').href = src;
+            const lightbox = GLightbox({ selector: '.glightbox' }); // Refresh lightbox
 
             document.querySelectorAll('.gallery-thumb').forEach(thumb => thumb.classList.remove('active'));
             el.classList.add('active');
