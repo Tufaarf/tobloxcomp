@@ -744,6 +744,12 @@ h6 {
   justify-content: center;
 }
 
+#preloader.loaded {
+  opacity: 0;
+  visibility: hidden;
+}
+
+
 #preloader img {
   width: 120px;
   height: auto;
