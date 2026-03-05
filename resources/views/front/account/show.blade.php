@@ -61,23 +61,41 @@
         }
 
         .product-image {
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 1920px;
-            /* Maximize to 1920px if container allows, but keep responsive */
-            aspect-ratio: 16 / 9;
+            max-width: 450px;
+            aspect-ratio: 4 / 5;
             margin: 0 auto;
+            background: #fff;
+            position: relative;
         }
 
         .product-image img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            /* Use contain for account images to see full details */
-            background: #f8f9fa;
+            object-fit: cover;
             display: block;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .product-image .slide-out {
+            transform: translateX(-100%);
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .product-image .slide-in {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        .product-image img.active {
+            transform: translateX(0);
+            opacity: 1;
         }
 
         /* Thumbnail Gallery */
@@ -144,15 +162,14 @@
 
         /* Order box styling */
         .order-box {
-            background: #ffeef4;
-            border-radius: 15px;
-            padding: 20px;
+            background: #fff;
+            border: 1.5px solid #fbd3e2;
+            border-radius: 20px;
+            padding: 30px;
             margin-top: 0;
-            /* Ensure it does not follow card height */
-            position: relative;
-            /* Align within column */
-            top: 0;
-            /* Align top of the order box */
+            position: sticky;
+            top: 100px;
+            box-shadow: 0 10px 30px rgba(241, 135, 171, 0.1);
         }
 
         .btn-checkout {
@@ -260,8 +277,8 @@
                 @endphp
 
                 <div class="product-image-container">
-                    <div class="product-image">
-                        <img id="main-display-image" src="{{ $firstImage }}" alt="{{ $item->name }}">
+                    <div class="product-image" id="image-container">
+                        <img id="main-display-image" class="active" src="{{ $firstImage }}" alt="{{ $item->name }}">
                     </div>
                     <!-- Gallery Thumbs -->
                     @if(count($imageList) > 1)
@@ -281,7 +298,6 @@
                         <div class="product-info-container">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h1 class="product-title mb-0">{{ $item->name }}</h1>
-                                <span class="badge bg-secondary">{{ $item->game->name }}</span>
                             </div>
                             <div class="product-description rich-text-content">
                                 {!! $item->description !!}
@@ -289,8 +305,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="order-box"
-                            style="border:1.5px solid #f187ab; border-radius:18px; background:#fff6fa; box-shadow:none;">
+                        <div class="order-box">
                             <h4 class="mb-4 text-center" style="color:#f187ab;font-weight:700;">Order Information</h4>
 
                             <form id="orderForm" method="POST" action="{{ route('account.store') }}"
@@ -391,9 +406,38 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 
-        // Image Gallery
+        // Image Gallery with Slide Animation
+        let isAnimating = false;
         function changeImage(el, src) {
-            document.getElementById('main-display-image').src = src;
+            if (isAnimating) return;
+            const container = document.getElementById('image-container');
+            const currentImg = container.querySelector('img.active');
+            
+            if (currentImg.src === src) return;
+
+            isAnimating = true;
+            
+            // Create new image element
+            const newImg = document.createElement('img');
+            newImg.src = src;
+            newImg.classList.add('slide-in');
+            container.appendChild(newImg);
+
+            // Trigger animation
+            setTimeout(() => {
+                currentImg.classList.add('slide-out');
+                currentImg.classList.remove('active');
+                
+                newImg.classList.add('active');
+                newImg.classList.remove('slide-in');
+            }, 50);
+
+            // Cleanup
+            setTimeout(() => {
+                currentImg.remove();
+                isAnimating = false;
+            }, 450);
+
             document.querySelectorAll('.gallery-thumb').forEach(thumb => thumb.classList.remove('active'));
             el.classList.add('active');
         }

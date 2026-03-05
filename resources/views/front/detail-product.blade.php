@@ -53,13 +53,14 @@ header.header .navmenu a.active {
 }
 
 .product-image {
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 1920px; /* Maximize to 1920px if container allows, but keep responsive */
-  aspect-ratio: 16 / 9;
+  max-width: 450px; /* Limit size for 4:5 aspect ratio */
+  aspect-ratio: 4 / 5;
   margin: 0 auto;
+  background: #f8f9fa;
 }
 
 .product-image img {
@@ -95,12 +96,14 @@ header.header .navmenu a.active {
 
 /* Order box styling */
 .order-box {
-  background: #ffeef4;
-  border-radius: 15px;
-  padding: 20px;
-  margin-top: 0; /* Ensure it does not follow card height */
-  position: relative; /* Align within column */
-  top: 0; /* Align top of the order box */
+  background: #fff;
+  border: 1.5px solid #fbd3e2;
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 0;
+  position: sticky;
+  top: 100px;
+  box-shadow: 0 10px 30px rgba(241, 135, 171, 0.1);
 }
 
 .quantity-control {
@@ -262,7 +265,7 @@ header.header .navmenu a.active {
                     </div>
                 </div>
                 <div class="col-lg-4">
-                  <div class="order-box" style="border:1.5px solid #f187ab; border-radius:18px; background:#fff6fa; box-shadow:none;">
+                  <div class="order-box">
                     <h4 class="mb-4 text-center" style="color:#f187ab;font-weight:700;">Order Information</h4>
                     <form id="orderForm" method="POST" action="{{ route('order.store') }}" enctype="multipart/form-data" autocomplete="off">
                       @csrf
