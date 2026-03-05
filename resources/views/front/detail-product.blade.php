@@ -298,7 +298,7 @@ header.header .navmenu a.active {
                           value="{{ old('email') }}"/>
                       </div>
                       <div class="mb-3" style="color:#f187ab;font-size:.98rem;">
-                        <div>Produk gift gamepass hanya dapat diproses jam 10 pagi sampai jam 10 malam, diluar jam tersebut akan diproses pada jam operasional.</div>
+                        <div>Produk gift gamepass hanya dapat diproses jam 8 pagi sampai jam 12 malam, pengiriman dapat di proses setelah pembayaran.</div>
                         <div class="mt-2">Proses pengiriman memakan waktu 5-12 jam</div>
                       </div>
                       <hr style="border-top:1.5px solid #f187ab;">
