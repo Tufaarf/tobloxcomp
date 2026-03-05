@@ -28,7 +28,7 @@ header.header .navmenu a.active {
 }
 
 .product-detail {
-  padding: 40px 0;
+  padding: 100px 0 40px 0; /* Add top padding to avoid navbar overlap */
   background: #fff;
 }
 
@@ -57,10 +57,9 @@ header.header .navmenu a.active {
   overflow: hidden;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 450px; /* Limit size for 4:5 aspect ratio */
-  aspect-ratio: 4 / 5;
+  max-width: 1920px; /* Maximize to 1920px if container allows, but keep responsive */
+  aspect-ratio: 16 / 9;
   margin: 0 auto;
-  background: #f8f9fa;
 }
 
 .product-image img {
@@ -249,9 +248,9 @@ header.header .navmenu a.active {
     <section class="product-detail">
         <div class="container">
             <div class="product-image-container">
-                <div class="product-image">
+                <a href="{{ Storage::url($product->banner) }}" class="glightbox product-image">
                     <img src="{{ Storage::url($product->banner) }}" alt="{{ $product->name }}">
-                </div>
+                </a>
             </div>
             <div class="row">
                 <div class="col-lg-8">

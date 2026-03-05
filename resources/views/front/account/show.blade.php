@@ -32,7 +32,7 @@
         }
 
         .product-detail {
-            padding: 40px 0;
+            padding: 100px 0 40px 0;
             background: #fff;
         }
 
@@ -65,11 +65,10 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 450px;
-            aspect-ratio: 4 / 5;
+            max-width: 1920px;
+            /* Maximize to 1920px if container allows, but keep responsive */
+            aspect-ratio: 16 / 9;
             margin: 0 auto;
-            background: #fff;
-            position: relative;
         }
 
         .product-image img {
@@ -278,8 +277,8 @@
                 @endphp
 
                 <div class="product-image-container">
-                    <div class="product-image" id="image-container">
-                        <img id="main-display-image" class="active" src="{{ $firstImage }}" alt="{{ $item->name }}">
+                    <div class="product-image">
+                        <img id="main-display-image" src="{{ $firstImage }}" alt="{{ $item->name }}">
                     </div>
                     <!-- Gallery Thumbs -->
                     @if(count($imageList) > 1)
@@ -412,35 +411,7 @@
 
         // Image Gallery
         function changeImage(el, src) {
-            if (isAnimating) return;
-            const container = document.getElementById('image-container');
-            const currentImg = container.querySelector('img.active');
-            
-            if (currentImg.src === src) return;
-
-            isAnimating = true;
-            
-            // Create new image element
-            const newImg = document.createElement('img');
-            newImg.src = src;
-            newImg.classList.add('slide-in');
-            container.appendChild(newImg);
-
-            // Trigger animation
-            setTimeout(() => {
-                currentImg.classList.add('slide-out');
-                currentImg.classList.remove('active');
-                
-                newImg.classList.add('active');
-                newImg.classList.remove('slide-in');
-            }, 50);
-
-            // Cleanup
-            setTimeout(() => {
-                currentImg.remove();
-                isAnimating = false;
-            }, 450);
-
+            document.getElementById('main-display-image').src = src;
             document.querySelectorAll('.gallery-thumb').forEach(thumb => thumb.classList.remove('active'));
             el.classList.add('active');
         }
