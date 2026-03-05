@@ -35,13 +35,47 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  <style>
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background: #ffffff;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.6s ease-out;
+    }
+    #preloader img {
+      width: 120px !important;
+      height: auto !important;
+      animation: breathe 2s ease-in-out infinite;
+    }
+    #preloader.loaded {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    @keyframes breathe {
+      0%, 100% { transform: scale(0.85); opacity: 0.7; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+  </style>
 </head>
+
+<body class="@yield('body-class', 'index-page')">
+
+  <div id="preloader">
+    <img src="{{ asset('assets/img/logo/logo1.png') }}" alt="Loading...">
+  </div>
+
   <main class="main">
-
-@yield('content')
+    @yield('content')
   </main>
-@stack('before-scripts')
 
-@stack('after-scripts')
+  @stack('before-scripts')
+  @stack('after-scripts')
+
+</body>
 
 </html>

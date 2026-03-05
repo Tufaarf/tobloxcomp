@@ -336,7 +336,7 @@
         }
     </style>
 
-    <body class="index-page">
+
 
         @include('front.header')
 
@@ -413,8 +413,7 @@
         <a href="https://wa.me/6281234567890" class="scroll-top d-flex align-items-center justify-content-center"><i
                 class="bi bi-whatsapp"></i></a>
 
-        <!-- Preloader -->
-        <div id="preloader"><img src="{{ asset('assets/img/logo/logo1.png') }}" alt="Loading..."></div>
+
 
         <!-- Vendor JS Files -->
         <script src="{{asset('assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -445,5 +444,5 @@
             });
         </script>
 
-    </body>
+
 @endsection

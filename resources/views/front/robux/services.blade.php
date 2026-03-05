@@ -414,7 +414,7 @@
     /* ===== AKHIR KODE BARU ===== */
   </style>
 
-  <body class="index-page">
+
 
     @include('front.header')
 
@@ -455,7 +455,7 @@
     <a href="https://wa.me/6281234567890" class="scroll-top d-flex align-items-center justify-content-center"><i
         class="bi bi-whatsapp"></i></a>
 
-    <div id="preloader"><img src="{{ asset('assets/img/logo/logo1.png') }}" alt="Loading..."></div>
+
 
     <script src="{{asset('assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/php-email-form/validate.js')}}"></script>
@@ -470,5 +470,5 @@
 
 
 
-  </body>
+
 @endsection
