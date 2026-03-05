@@ -135,6 +135,23 @@
             object-fit: cover;
         }
 
+        /* Swiper Fixes */
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .swiper-button-next, .swiper-button-prev {
+            color: #f187ab;
+        }
+        .swiper-pagination-bullet-active {
+            background: #f187ab;
+        }
+
 
         /* Product info container */
         .product-info-container {
@@ -278,17 +295,30 @@
                 @endphp
 
                 <div class="product-image-container">
-                    <div class="product-image" id="image-container">
-                        <a id="main-glightbox" href="{{ $firstImage }}" class="glightbox">
-                            <img id="main-display-image" class="active" src="{{ $firstImage }}" alt="{{ $item->name }}">
-                        </a>
+                    <div class="product-image">
+                        <!-- Swiper -->
+                        <div class="swiper mySwiper">
+                            <div class="swiper-wrapper">
+                                @foreach($imageList as $img)
+                                    <div class="swiper-slide">
+                                        <a href="{{ Storage::url($img) }}" class="glightbox" data-gallery="gallery1">
+                                            <img src="{{ Storage::url($img) }}" alt="{{ $item->name }}">
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-pagination"></div>
+                        </div>
                     </div>
                     <!-- Gallery Thumbs -->
                     @if(count($imageList) > 1)
                         <div class="gallery-thumbs">
-                            @foreach($imageList as $img)
+                            @foreach($imageList as $index => $img)
                                 <div class="gallery-thumb {{ $loop->first ? 'active' : '' }}"
-                                    onclick="changeImage(this, '{{ Storage::url($img) }}')">
+                                    data-index="{{ $index }}"
+                                    onclick="goToSlide({{ $index }}, this)">
                                     <img src="{{ Storage::url($img) }}" alt="Thumb">
                                 </div>
                             @endforeach
@@ -409,44 +439,38 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 
-        // Image Gallery with Slide Animation
-        let isAnimating = false;
-        function changeImage(el, src) {
-            if (isAnimating) return;
-            const container = document.getElementById('image-container');
-            const currentImg = container.querySelector('img.active');
-            
-            if (currentImg.src === src) return;
+        // Initialize Swiper
+        const swiper = new Swiper(".mySwiper", {
+            loop: true,
+            grabCursor: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            on: {
+                slideChange: function () {
+                    const index = this.realIndex;
+                    updateThumbnails(index);
+                }
+            }
+        });
 
-            isAnimating = true;
-            
-            // Create new image element
-            const newImg = document.createElement('img');
-            newImg.src = src;
-            newImg.classList.add('slide-in');
-            container.appendChild(newImg);
+        function goToSlide(index, el) {
+            swiper.slideToLoop(index);
+        }
 
-            // Trigger animation
-            setTimeout(() => {
-                currentImg.classList.add('slide-out');
-                currentImg.classList.remove('active');
-                
-                newImg.classList.add('active');
-                newImg.classList.remove('slide-in');
-            }, 50);
-
-            // Cleanup
-            setTimeout(() => {
-                currentImg.remove();
-                isAnimating = false;
-            }, 450);
-
-            // Update Lightbox href
-            document.getElementById('main-glightbox').href = src;
-            const lightbox = GLightbox({ selector: '.glightbox' }); // Refresh lightbox
-
-            document.querySelectorAll('.gallery-thumb').forEach(thumb => thumb.classList.remove('active'));
-            el.classList.add('active');
+        function updateThumbnails(index) {
+            document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+                if (parseInt(thumb.getAttribute('data-index')) === index) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
         }
 
         // Payment Modal Logic

@@ -22,8 +22,8 @@
   <link href="{{asset('assets/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
   <link href="{{asset('assets/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
   <link href="{{asset('assets/aos/aos.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
   <link href="{{asset('assets/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
 
   <!-- Main CSS File -->
   <link href="{{asset('css/main.css')}}?v={{ time() }}" rel="stylesheet">
@@ -77,6 +77,18 @@
   <main class="main">
     @yield('content')
   </main>
+
+  @include('front.footer')
+ 
+  <!-- Vendor JS Files -->
+  <script src="{{asset('assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset('assets/aos/aos.js')}}"></script>
+  <script src="{{asset('assets/glightbox/js/glightbox.min.js')}}"></script>
+  <script src="{{asset('assets/swiper/swiper-bundle.min.js')}}"></script>
+  <script src="{{asset('assets/imagesloaded/imagesloaded.pkgd.min.js')}}"></script>
+  <script src="{{asset('assets/isotope-layout/isotope.pkgd.min.js')}}"></script>
+  
+  <script src="{{asset('js/main.js')}}?v={{ time() }}"></script>
 
   @stack('before-scripts')
   @stack('after-scripts')
