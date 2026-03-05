@@ -157,5 +157,7 @@
     @endif
   @endif
 </div>
+
+<script src="{{asset('js/main.js')}}?v={{ time() }}"></script>
 @include('front.footer')
 @endsection

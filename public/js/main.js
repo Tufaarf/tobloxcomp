@@ -42,15 +42,56 @@
    */
   const preloader = document.querySelector('#preloader');
   if (preloader) {
-    window.addEventListener('load', () => {
+    const hidePreloader = () => {
       setTimeout(() => {
         preloader.classList.add('loaded');
-        setTimeout(() => {
-          preloader.remove();
-        }, 600); // Menunggu transisi CSS selesai (0.6s)
-      }, 1000); // Delay 1 detik setelah halaman terload
+      }, 300);
+    };
+
+    // Handle initial load and back/forward cache (bfcache)
+    if (document.readyState === 'complete') {
+      hidePreloader();
+    } else {
+      window.addEventListener('load', hidePreloader);
+    }
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) { // If coming from bfcache (back button)
+        hidePreloader();
+      }
     });
+
+    // Failsafe: Pastikan loading hilang setelah 3 detik
+    setTimeout(() => {
+      if (!preloader.classList.contains('loaded')) {
+        preloader.classList.add('loaded');
+      }
+    }, 3000);
   }
+
+  // Show preloader only for actual internal page navigations
+  document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function (e) {
+      const href = this.getAttribute('href');
+      if (!href) return;
+
+      const url = new URL(href, window.location.origin);
+      const isInternal = url.origin === window.location.origin;
+      const isSamePage = url.pathname === window.location.pathname && url.search === window.location.search;
+      const isAnchor = href.startsWith('#') || (isSamePage && url.hash);
+      const isExternal = this.getAttribute('target') === '_blank';
+      const isDownload = this.hasAttribute('download');
+      const isSpecial = href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('wa.me') || href.includes('wa.link');
+
+      if (isInternal && !isAnchor && !isExternal && !isDownload && !isSpecial) {
+        // Only show loader if we're actually changing the page path or query
+        if (!isSamePage) {
+          if (preloader) {
+            preloader.classList.remove('loaded');
+          }
+        }
+      }
+    });
+  });
 
   /**
    * Scroll top button

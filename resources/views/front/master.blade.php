@@ -44,7 +44,12 @@
       display: flex !important;
       align-items: center;
       justify-content: center;
-      transition: all 0.6s ease-out;
+      transition: all 0.3s ease-out;
+    }
+    #preloader:before,
+    #preloader:after {
+      display: none !important;
+      content: none !important;
     }
     #preloader img {
       width: 120px !important;
