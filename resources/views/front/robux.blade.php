@@ -53,7 +53,7 @@ header.header .navmenu a.active{ color:#e6f2ff; }
 <a href="https://wa.me/6281234567890" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-whatsapp"></i></a>
 
 <!-- Preloader -->
-<div id="preloader"></div>
+<div id="preloader"><img src="{{ asset('storage/logo/logo1.png') }}" alt="Loading..."></div>
 
 <!-- Vendor JS Files -->
 <script src="{{asset('assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>

@@ -50,9 +50,6 @@ class FonnteService
         }
     }
 
-    /**
-     * Kirim notifikasi order item baru ke admin.
-     */
     public function notifyNewItemOrder(ItemOrder $order): void
     {
         $message = "📦 *ORDER ITEM BARU*\n"

@@ -994,7 +994,7 @@
                 class="bi bi-whatsapp"></i></a>
 
         <!-- Preloader -->
-        <div id="preloader"></div>
+        <div id="preloader"><img src="{{ asset('storage/logo/logo1.png') }}" alt="Loading..."></div>
 
         <!-- Vendor JS Files -->
         <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
