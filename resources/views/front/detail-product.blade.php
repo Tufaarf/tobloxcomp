@@ -53,13 +53,15 @@ header.header .navmenu a.active {
 }
 
 .product-image {
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 1920px; /* Maximize to 1920px if container allows, but keep responsive */
-  aspect-ratio: 16 / 9;
+  max-width: 380px; /* Reduced from 450px */
+  aspect-ratio: 4 / 5;
   margin: 0 auto;
+  background: #f8f9fa;
+  cursor: zoom-in;
 }
 
 .product-image img {
@@ -95,12 +97,14 @@ header.header .navmenu a.active {
 
 /* Order box styling */
 .order-box {
-  background: #ffeef4;
-  border-radius: 15px;
-  padding: 20px;
-  margin-top: 0; /* Ensure it does not follow card height */
-  position: relative; /* Align within column */
-  top: 0; /* Align top of the order box */
+  background: #fff;
+  border: 1.5px solid #fbd3e2;
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 0;
+  position: sticky;
+  top: 100px;
+  box-shadow: 0 10px 30px rgba(241, 135, 171, 0.1);
 }
 
 .quantity-control {
@@ -262,7 +266,7 @@ header.header .navmenu a.active {
                     </div>
                 </div>
                 <div class="col-lg-4">
-                  <div class="order-box" style="border:1.5px solid #f187ab; border-radius:18px; background:#fff6fa; box-shadow:none;">
+                  <div class="order-box">
                     <h4 class="mb-4 text-center" style="color:#f187ab;font-weight:700;">Order Information</h4>
                     <form id="orderForm" method="POST" action="{{ route('order.store') }}" enctype="multipart/form-data" autocomplete="off">
                       @csrf
@@ -348,5 +352,233 @@ header.header .navmenu a.active {
     </div>
   </div>
 </div>
+
+@include('front.footer')
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// Open Modal when 'Beli Sekarang' is clicked
+document.getElementById('btnOpenPayModal').addEventListener('click', function() {
+    openPayModal();
+    updatePrice();
+});
+
+function openPayModal() {
+    document.getElementById('payModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    updatePrice();
+}
+function closePayModal() {
+    document.getElementById('payModal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Validasi Username Roblox sebelum Checkout
+let isUserResolved = false;
+let resolvedFor    = "";
+
+function verifyUsername() {
+    const uname = document.getElementById('username').value.trim();
+    const resultDiv = document.getElementById('checkResult');
+    const btn = document.getElementById('btnVerify');
+
+    if (!uname) {
+        resultDiv.innerHTML = '<span class="text-danger fw-bold">Harap isi username Roblox.</span>';
+        return;
+    }
+
+    btn.disabled = true;
+    resultDiv.innerHTML = '<div class="spinner"></div><div class="mt-2 text-muted">Memeriksa username...</div>';
+
+    fetch('{{ route('roblox.resolve') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ username: uname })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            isUserResolved = true;
+            resolvedFor = data.username || uname;
+            resultDiv.innerHTML = `
+                <div class="result-card">
+                    <img src="${data.avatar}" alt="${data.username}">
+                    <div class="username">${data.username}</div>
+                </div>
+            `;
+        } else {
+            isUserResolved = false; resolvedFor = "";
+            resultDiv.innerHTML = `<span class="text-danger fw-bold">${data.message || 'Username tidak ditemukan.'}</span>`;
+        }
+    })
+    .catch(() => {
+        isUserResolved = false; resolvedFor = "";
+        resultDiv.innerHTML = '<span class="text-danger fw-bold">Gagal menghubungi server.</span>';
+    })
+    .finally(() => {
+        btn.disabled = false;
+    });
+}
+
+// Update Harga dan Info Pembayaran
+function updatePrice() {
+    const paymentMethodSelect = document.getElementById('paymentMethod');
+    const selectedMethod = paymentMethodSelect.options[paymentMethodSelect.selectedIndex];
+    // No Tax
+    const basePrice = parseFloat("{{ $product->price }}");
+    const totalPrice = basePrice;
+
+    // Tampilkan info pembayaran sesuai tipe
+    const payInfoDiv = document.getElementById('payInfo');
+    if (selectedMethod.dataset.type === 'image') {
+        payInfoDiv.innerHTML = `
+            <div class="mb-2"><b>Scan QR ${selectedMethod.dataset.name}:</b></div>
+            <img src="${selectedMethod.dataset.target}" alt="QR ${selectedMethod.dataset.name}" style="max-width:100%;max-height:300px;object-fit:contain;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08)">
+            <div class="mt-2 text-center">
+                <a href="${selectedMethod.dataset.target}" download="QRIS-TOBLOX.jpg" class="btn btn-sm btn-secondary" style="background:#f187ab;color:#fff;border:none;">Download QRIS</a>
+            </div>
+            <div class="mt-2"><b>Total Harga:</b> Rp ${totalPrice.toLocaleString('id-ID')}</div>
+        `;
+    } else {
+        payInfoDiv.innerHTML = `
+            <div class="mb-2"><b>Tujuan ${selectedMethod.dataset.name}:</b></div>
+            <div class="fw-bold" id="payTarget" style="font-size:1.05rem">${selectedMethod.dataset.target}</div>
+            <button class="btn btn-sm btn-checkout mt-2" type="button" onclick="copyPayTarget()">Copy</button>
+            <div class="mt-2"><b>Total Harga:</b> Rp ${totalPrice.toLocaleString('id-ID')}</div>
+        `;
+    }
+    document.getElementById('totalPrice').innerText = totalPrice.toLocaleString('id-ID');
+}
+
+function onPaymentChange() {
+    updatePrice();
+}
+
+function copyPayTarget(){
+    const el = document.getElementById('payTarget');
+    if (!el) return;
+    navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: 'Nomor/rekening tujuan disalin!',
+            timer: 1500
+        });
+    });
+}
+
+// Submit form utama saat klik tombol submit di modal
+document.getElementById('modalSubmitBtn').addEventListener('click', async function(e) {
+    e.preventDefault();
+
+    // Validasi minimal
+    if (!isUserResolved) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validasi Gagal',
+            text: 'Silakan cek username Roblox terlebih dahulu.'
+        });
+        return;
+    }
+
+    // File validation
+    const paymentProof = document.getElementById('payment_proof').files[0];
+    if (!paymentProof) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validasi Gagal',
+            text: 'Harap upload bukti pembayaran'
+        });
+        return;
+    }
+
+    // Show loading
+    Swal.fire({
+        title: 'Memproses pesanan...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    const form = document.getElementById('orderForm');
+    const formData = new FormData();
+    formData.append('username', document.getElementById('username').value);
+    formData.append('wa_number', document.getElementById('wa_number').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('product_id', '{{ $product->id }}');
+    formData.append('game_id', '{{ $product->game->id }}');
+    formData.append('_token', '{{ csrf_token() }}');
+    formData.append('payment_method', document.getElementById('paymentMethod').value);
+    const paymentProofFile = document.getElementById('payment_proof').files[0];
+    if (paymentProofFile) {
+        formData.append('payment_proof', paymentProofFile);
+    }
+
+    try {
+        const response = await fetch('{{ route('order.store') }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            await Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: data.message,
+                timer: 2000
+            });
+            window.location.href = data.redirect_url;
+        } else {
+            if (data.errors) {
+                const errorMessages = Object.values(data.errors).flat().join('\n');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validasi Gagal',
+                    text: errorMessages
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'Terjadi kesalahan saat memproses pesanan.'
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Terjadi kesalahan saat mengirim pesanan.'
+        });
+    }
+});
+
+// Mengaktifkan tombol submit ketika form diisi dengan benar
+toggleSubmitButton();
+</script>
+
+<script src="{{asset('assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('assets/php-email-form/validate.js')}}"></script>
+<script src="{{asset('assets/aos/aos.js')}}"></script>
+<script src="{{asset('assets/glightbox/js/glightbox.min.js')}}"></script>
+<script src="{{asset('assets/purecounter/purecounter_vanilla.js')}}"></script>
+<script src="{{asset('assets/swiper/swiper-bundle.min.js')}}"></script>
+<script src="{{asset('assets/imagesloaded/imagesloaded.pkgd.min.js')}}"></script>
+<script src="{{asset('assets/isotope-layout/isotope.pkgd.min.js')}}"></script>
+
+<script src="{{asset('js/main.js')}}?v={{ time() }}"></script>
 
 @endsection

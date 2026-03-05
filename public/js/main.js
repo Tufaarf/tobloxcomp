@@ -80,9 +80,9 @@
       const isAnchor = href.startsWith('#') || (isSamePage && url.hash);
       const isExternal = this.getAttribute('target') === '_blank';
       const isDownload = this.hasAttribute('download');
-      const isLightbox = this.classList.contains('glightbox') || this.hasAttribute('data-glightbox');
+      const isSpecial = href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('wa.me') || href.includes('wa.link');
 
-      if (isInternal && !isAnchor && !isExternal && !isDownload && !isSpecial && !isLightbox) {
+      if (isInternal && !isAnchor && !isExternal && !isDownload && !isSpecial) {
         // Only show loader if we're actually changing the page path or query
         if (!isSamePage) {
           if (preloader) {
