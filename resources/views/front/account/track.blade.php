@@ -61,7 +61,7 @@
 
   <div class="d-flex justify-content-center gap-2 mb-4">
     <a href="{{ route('order.track') }}" class="btn btn-outline-secondary" style="border-radius:99px; padding:10px 24px; border-color:var(--border); background:#fff;">Top Up Robux</a>
-    <a href="{{ route('account.track') }}" class="btn btn-pink" style="border-radius:99px; padding:10px 24px;">Cek Akun</a>
+    <a href="{{ route('account.track') }}" class="btn btn-pink" style="border-radius:99px; padding:10px 24px;">Jual Beli Akun</a>
   </div>
 
   {{-- Form pencarian --}}
