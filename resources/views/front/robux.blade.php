@@ -66,7 +66,6 @@ header.header .navmenu a.active{ color:#e6f2ff; }
 <script src="{{asset('assets/isotope-layout/isotope.pkgd.min.js')}}"></script>
 
 <!-- Main JS File -->
+<script src="{{asset('js/main.js')}}?v={{ time() }}"></script>
 
-
-</body>
 @endsection
