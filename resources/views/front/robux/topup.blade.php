@@ -429,9 +429,11 @@ input[type="range"]::-webkit-slider-thumb {
           <button type="button" class="modal-close" aria-label="Close" onclick="closePayModal()">×</button>
         </div>
 
-        <label for="wa" class="mt-1">No WhatsApp</label>
-        <input type="text" id="wa" name="wa_number" class="form-control" placeholder="08xxxxxxxxxx" value="{{ old('wa_number') }}">
-
+        <div class="mb-4">
+          <label for="wa_number" class="form-label fw-bold">Nomor WhatsApp (Opsional)</label>
+          <input type="text" name="wa_number" id="wa_number" class="form-control" placeholder="0812xxxxxxxx" value="{{ old('wa_number') }}">
+          <small class="text-muted">Opsional, untuk mempermudah admin menghubungi Anda.</small>
+        </div>
         <label class="mt-3" for="paymentMethod">Metode Pembayaran</label>
         <select id="paymentMethod" name="payment_method" class="form-control" onchange="onPaymentChange(); updatePrice();">
           @foreach($paymentMethods as $pm)

@@ -36,7 +36,7 @@ class TopupController extends Controller
             'avatar_url' => 'nullable|string',
             'robux_amount' => 'required|integer|min:50|max:5000',
             'payment_method' => 'required|string|exists:payment_methods,code',
-            'wa_number' => 'required|string|min:10|max:20',
+            'wa_number' => 'nullable|string|min:10|max:20',
             'payment_proof' => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
             // jika kamu masih mengirim teks bukti di meta, ini opsional:
             'payment_proof_text' => 'nullable|string|max:1000',
@@ -84,7 +84,7 @@ class TopupController extends Controller
             'payment_method' => $data['payment_method'],
             'pay_to' => $pm->type === 'qris' && $pm->qris_image ? Storage::url($pm->qris_image) : $pm->account_number,
             'pay_to_type' => $pm->type === 'qris' ? 'image' : 'text',
-            'wa_number' => $data['wa_number'],
+            'wa_number' => $data['wa_number'] ?? '-',
 
             'payment_proof_path' => $proofPath,
             'status' => TopupOrder::STAT_PENDING, // default

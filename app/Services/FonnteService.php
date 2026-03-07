@@ -83,7 +83,7 @@ class FonnteService
             . "💎 Robux: " . number_format($order->robux_amount, 0, ',', '.') . "\n"
             . "💰 Total: Rp " . number_format($order->total_price, 0, ',', '.') . "\n"
             . "💳 Pembayaran: " . strtoupper($order->payment_method) . "\n"
-            . "📱 WhatsApp: {$order->wa_number}\n"
+            . "📱 WhatsApp: " . ($order->wa_number ?? '-') . "\n"
             . "━━━━━━━━━━━━━━━\n"
             . "⏰ Waktu: " . now()->setTimezone('Asia/Jakarta')->format('d M Y H:i') . "\n"
             . "📌 Status: " . ucfirst($order->status);
