@@ -79,6 +79,20 @@
   </main>
 
   @stack('before-scripts')
+
+  <!-- Vendor JS Files -->
+  <script src="{{asset('assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset('assets/php-email-form/validate.js')}}"></script>
+  <script src="{{asset('assets/aos/aos.js')}}"></script>
+  <script src="{{asset('assets/glightbox/js/glightbox.min.js')}}"></script>
+  <script src="{{asset('assets/purecounter/purecounter_vanilla.js')}}"></script>
+  <script src="{{asset('assets/swiper/swiper-bundle.min.js')}}"></script>
+  <script src="{{asset('assets/imagesloaded/imagesloaded.pkgd.min.js')}}"></script>
+  <script src="{{asset('assets/isotope-layout/isotope.pkgd.min.js')}}"></script>
+
+  <!-- Main JS File -->
+  <script src="{{asset('js/main.js')}}?v={{ time() }}"></script>
+
   @stack('after-scripts')
 
 </body>
