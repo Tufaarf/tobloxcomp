@@ -468,7 +468,7 @@ input[type="range"]::-webkit-slider-thumb {
 <script>
 const pricePer50 = {{ (int)($pricePer50 ?? 7000) }};
 const csrfToken  = "{{ csrf_token() }}";
-const tutorialVideoId = "{{ $tutorialVideoId ?? '4iPUSVZ0FrU' }}"; // ganti ID YouTube kamu
+const tutorialVideoId = "{{ $tutorialVideoId ?? '3SvGMz6dh-o' }}"; // ganti ID YouTube kamu
 
 let isUserResolved = false;
 let resolvedFor    = "";
@@ -624,12 +624,15 @@ async function startGamepassCheck() {
   openCheckModal();
 
   try{
+    console.log("Starting gamepass check for:", { username: uname, amount: amount });
     const response = await fetch('{{ route('roblox.check') }}', {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'X-CSRF-TOKEN':csrfToken, 'Accept':'application/json' },
       body: JSON.stringify({ username: uname, amount: amount })
     });
+    
     const result = await response.json();
+    console.log("Server Response:", result);
 
     if (result.status){
       const user = result.data;

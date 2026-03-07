@@ -62,19 +62,33 @@ class RobloxServices
      */
     public function getUniverseIds(int $userId): array
     {
+        Log::info("Fetching universes for UserID: {$userId}");
+        // Gunakan v2/users/{userId}/games untuk mengambil list game user
         $response = Http::get("https://games.roblox.com/v2/users/{$userId}/games", [
+            'accessFilter' => 'Public',
             'sortOrder' => 'Asc',
-            'limit' => 50, // Ambil hingga 50 experience, bisa disesuaikan
+            'limit' => 50,
         ]);
 
         if (!$response->successful()) {
+            Log::error("Failed to fetch games for UserID {$userId}: Status {$response->status()} - " . $response->body());
             return [];
         }
 
-        $games = $response->json('data') ?? [];
+        $data = $response->json();
+        Log::info("Games API Response for UserID {$userId}: " . json_encode($data));
+        
+        $games = $data['data'] ?? [];
 
-        // Ambil hanya ID universe-nya
-        return array_map(fn($game) => $game['id'], $games);
+        if (empty($games)) {
+            Log::warning("No public games found for UserID {$userId}");
+        }
+
+        // PENTING: Ambil 'universeId' bukan 'id' (Place ID)
+        $universeIds = array_map(fn($game) => $game['universeId'] ?? $game['id'], $games);
+        Log::info("Resolved Universe IDs for UserID {$userId}: " . implode(', ', $universeIds));
+
+        return $universeIds;
     }
 
     /**
@@ -87,21 +101,30 @@ class RobloxServices
      */
     public function findGamepassByPrice(int $universeId, int $price): ?array
     {
-        // API untuk mengambil gamepass dari sebuah experience/universe
-        $response = Http::get("https://games.roblox.com/v1/games/{$universeId}/game-passes", [
-            'sortOrder' => 'Asc',
-            'limit' => 100, // Cek hingga 100 gamepass per experience
+        Log::info("Searching gamepasses in UniverseID: {$universeId} for Price: {$price}");
+        // Endpoint baru sejak v1/games/{universeId}/game-passes didepresiasi (Aug 2025)
+        // Gunakan passView=Full agar field 'price' muncul di response
+        $response = Http::get("https://apis.roblox.com/game-passes/v1/universes/{$universeId}/game-passes", [
+            'passView' => 'Full',
+            'pageSize' => 100,
         ]);
 
         if (!$response->successful()) {
+            Log::error("Failed to fetch game-passes for UniverseID {$universeId}: Status {$response->status()} - " . $response->body());
             return null;
         }
 
-        $gamepasses = $response->json('data') ?? [];
+        $data = $response->json();
+        Log::info("Gamepasses API Response for UniverseID {$universeId}: " . json_encode($data));
+        
+        // BUG FIX: apis.roblox.com menggunakan key 'gamePasses', bukan 'data'
+        $gamepasses = $data['gamePasses'] ?? $data['data'] ?? [];
 
         foreach ($gamepasses as $gamepass) {
+            Log::info("Checking Gamepass: ID {$gamepass['id']}, Name '{$gamepass['name']}', Price " . ($gamepass['price'] ?? 'N/A'));
             // Cek apakah gamepass dijual dan harganya cocok
-            if (isset($gamepass['price']) && $gamepass['price'] === $price) {
+            if (isset($gamepass['price']) && (int)$gamepass['price'] === (int)$price) {
+                Log::info("MATCH FOUND: Gamepass ID {$gamepass['id']} matches price {$price}");
                 return [
                     'id' => $gamepass['id'],
                     'name' => $gamepass['name'],
@@ -111,6 +134,7 @@ class RobloxServices
             }
         }
 
+        Log::info("No matching gamepass found in UniverseID {$universeId}");
         return null;
     }
 }
