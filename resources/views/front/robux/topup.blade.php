@@ -368,6 +368,10 @@ input[type="range"]::-webkit-slider-thumb {
   <span id="robuxAmount" class="pill" style="display:none">{{ old('robux_amount', 50) }}</span>
 </p>
           <p class="price-row">Harga: <span class="rp">Rp</span> <span id="robuxPrice" class="price-num">7000</span></p>
+          <div class="mt-2 p-2 bg-light border-start border-pink border-4 rounded small">
+            <i class="bi bi-info-circle me-1"></i> 
+            Wajib punya Gamepass seharga: <b class="text-pink"><span id="gamepassPriceRequired">71</span> Robux</b>
+          </div>
         </div>
       </div>
 
@@ -470,13 +474,40 @@ input[type="range"]::-webkit-slider-thumb {
 <script>
 const pricePer50 = {{ (int)($pricePer50 ?? 7000) }};
 const csrfToken  = "{{ csrf_token() }}";
-const tutorialVideoId = "{{ $tutorialVideoId ?? '3SvGMz6dh-o' }}"; // ganti ID YouTube kamu
+const tutorialVideoId = "{{ $tutorialVideoId ?? 'mgfEKcXwdqU' }}"; // ganti ID YouTube kamu
 
 let isUserResolved = false;
 let resolvedFor    = "";
 
 /* ===== PRICE ===== */
 function formatIDR(n){ return n.toLocaleString('id-ID'); }
+
+function getGamepassPrice(amount) {
+  const mapping = {
+    100: 143, 200: 286, 300: 429, 400: 572, 500: 714,
+    600: 857, 700: 1000, 800: 1143, 900: 1286, 1000: 1429,
+    1100: 1572, 1200: 1715, 1300: 1858, 1400: 2000, 1500: 2143,
+    1600: 2286, 1700: 2429, 1800: 2572, 1900: 2715, 2000: 2858,
+    2100: 3000, 2200: 3143, 2300: 3286, 2400: 3429, 2500: 3572,
+    2600: 3715, 2700: 3858, 2800: 4000, 2900: 4143, 3000: 4286,
+    3100: 4429, 3200: 4572, 3300: 4715, 3400: 4858, 3500: 5000,
+    3600: 5143, 3700: 5286, 3800: 5429, 3900: 5572, 4000: 5715,
+    4100: 5858, 4200: 6000, 4300: 6143, 4400: 6286, 4500: 6429,
+    4600: 6572, 4700: 6715, 4800: 6858, 4900: 7000, 5000: 7143,
+    5100: 7286, 5200: 7429, 5300: 7572, 5400: 7715, 5500: 7858,
+    5600: 8000, 5700: 8143, 5800: 8286, 5900: 8429, 6000: 8572,
+    6100: 8715, 6200: 8858, 6300: 9000, 6400: 9143, 6500: 9286,
+    6600: 9429, 6700: 9572, 6800: 9715, 6900: 9858, 7000: 10000,
+    7100: 10143, 7200: 10286, 7300: 10429, 7400: 10572, 7500: 10715,
+    7600: 10858, 7700: 11000, 7800: 11143, 7900: 11286, 8000: 11429,
+    8100: 11572, 8200: 11715, 8300: 11858, 8400: 12000, 8500: 12143,
+    8600: 12286, 8700: 12429, 8800: 12572, 8900: 12715, 9000: 12858,
+    9100: 13000, 9200: 13143, 9300: 13286, 9400: 13429, 9500: 13572,
+    9600: 13715, 9700: 13858, 9800: 14000, 9900: 14143, 10000: 14286,
+  };
+  return mapping[amount] || Math.ceil(amount / 0.7);
+}
+
 function updatePrice() {
   const robux = +document.getElementById('robuxSlider').value;
   const method = document.getElementById('paymentMethod');
@@ -488,8 +519,12 @@ function updatePrice() {
   document.getElementById('robuxAmount').innerText = robux;
   document.getElementById('robuxPrice').innerText  = formatIDR(basePrice);
   document.getElementById('priceOnly').innerText   = formatIDR(basePrice);
-  // document.getElementById('taxAmount').innerText   = formatIDR(tax); // Removed
   document.getElementById('totalPrice').innerText  = formatIDR(total);
+
+  // Update Gamepass Price Info
+  const reqPrice = getGamepassPrice(robux);
+  const gpLabel = document.getElementById('gamepassPriceRequired');
+  if (gpLabel) gpLabel.innerText = reqPrice;
 }
 
 /* ===== USERNAME ===== */
@@ -626,7 +661,6 @@ async function startGamepassCheck() {
   openCheckModal();
 
   try{
-    console.log("Starting gamepass check for:", { username: uname, amount: amount });
     const response = await fetch('{{ route('roblox.check') }}', {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'X-CSRF-TOKEN':csrfToken, 'Accept':'application/json' },
@@ -634,7 +668,6 @@ async function startGamepassCheck() {
     });
     
     const result = await response.json();
-    console.log("Server Response:", result);
 
     if (result.status){
       const user = result.data;
@@ -649,8 +682,8 @@ async function startGamepassCheck() {
           <div class="fw-bold mb-1">Gamepass ditemukan</div>
           <div>Nama: <b>${user.gamepass.name}</b></div>
           <div>ID Gamepass: <code>${user.gamepass.id}</code></div>
-          <div>Universe ID: <code>${user.gamepass.universeId ?? '-'}</code></div>
-          <div>Harga: <b>${user.gamepass.price}</b> Robux</div>
+          <div>Harga Gamepass: <b class="text-pink">${user.gamepass.price}</b> Robux</div>
+          <div class="text-success small fw-bold mt-1">✓ Sesuai untuk mendapatkan ${user.requestedAmount || amount} Robux</div>
           <div class="mt-2"><a href="https://www.roblox.com/game-pass/${user.gamepass.id}" target="_blank" rel="noopener">Lihat di Roblox</a></div>
         </div>
         <small class="text-muted d-block mt-2">Jika nominal diubah, lakukan checkout lagi untuk pencarian ulang.</small>

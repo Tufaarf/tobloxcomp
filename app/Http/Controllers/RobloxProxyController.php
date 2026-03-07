@@ -48,18 +48,20 @@ class RobloxProxyController extends Controller
                 return response()->json(['status' => false, 'message' => 'Akun Roblox ini belum memiliki experience (game).']);
             }
 
-            // 3. Iterasi setiap experience untuk mencari gamepass yang cocok
+            // 3. Hitung harga gamepass yang dibutuhkan
+            $requiredPrice = $this->robloxService->calculateRequiredPrice($amount);
+
+            // 4. Iterasi setiap experience untuk mencari gamepass yang cocok
             $foundGamepass = null;
             foreach ($universeIds as $universeId) {
-                $gamepass = $this->robloxService->findGamepassByPrice($universeId, $amount);
+                $gamepass = $this->robloxService->findGamepassByPrice($universeId, $requiredPrice);
                 if ($gamepass !== null) {
                     $foundGamepass = $gamepass;
-                    break; // Hentikan pencarian jika sudah ditemukan
+                    break;
                 }
             }
 
             if ($foundGamepass) {
-                // Ambil avatar untuk ditampilkan di frontend
                 $avatar = $this->robloxService->getAvatarHeadshot($userId);
                 return response()->json([
                     'status' => true,
@@ -70,13 +72,14 @@ class RobloxProxyController extends Controller
                         'displayName' => $user['displayName'],
                         'avatarUrl' => $avatar,
                         'gamepass' => $foundGamepass,
+                        'requestedAmount' => $amount,
                     ]
                 ]);
             }
 
             return response()->json([
                 'status' => false,
-                'message' => "Tidak ditemukan gamepass dengan harga {$amount} Robux di experience manapun milik akun ini."
+                'message' => "Tidak ditemukan gamepass dengan harga {$requiredPrice} Robux (untuk mendapatkan {$amount} Robux) di experience manapun milik akun ini."
             ]);
 
         } catch (Throwable $e) {
