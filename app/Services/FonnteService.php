@@ -75,11 +75,17 @@ class FonnteService
      */
     public function notifyNewTopupOrder(TopupOrder $order): void
     {
+        $meta        = $order->meta ?? [];
+        $gamepassId  = $meta['gamepass_id']   ?? '-';
+        $gamepassName = $meta['gamepass_name'] ?? '-';
+
         $message = "💎 *ORDER ROBUX BARU*\n"
             . "━━━━━━━━━━━━━━━\n"
             . "🆔 Order ID: {$order->order_id}\n"
             . "👤 Username: {$order->username}\n"
             . "🎮 Roblox ID: " . ($order->roblox_user_id ?? '-') . "\n"
+            . "🎫 Gamepass ID: {$gamepassId}\n"
+            . "🏷️ Gamepass: {$gamepassName}\n"
             . "💎 Robux: " . number_format($order->robux_amount, 0, ',', '.') . "\n"
             . "💰 Total: Rp " . number_format($order->total_price, 0, ',', '.') . "\n"
             . "💳 Pembayaran: " . strtoupper($order->payment_method) . "\n"

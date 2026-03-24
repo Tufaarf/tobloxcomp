@@ -40,6 +40,8 @@ class TopupController extends Controller
             'payment_proof' => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
             // jika kamu masih mengirim teks bukti di meta, ini opsional:
             'payment_proof_text' => 'nullable|string|max:1000',
+            'gamepass_id'   => 'nullable|string|max:100',
+            'gamepass_name' => 'nullable|string|max:255',
         ]);
 
         // ambil metode dari config
@@ -66,6 +68,10 @@ class TopupController extends Controller
         $meta = [];
         if ($req->filled('payment_proof_text')) {
             $meta['payment_proof_text'] = (string) $req->input('payment_proof_text');
+        }
+        if ($req->filled('gamepass_id')) {
+            $meta['gamepass_id']   = (string) $req->input('gamepass_id');
+            $meta['gamepass_name'] = (string) $req->input('gamepass_name', '-');
         }
 
         // simpan order
